@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width initial-scale=1.0">
+    <title>Business Partner Groups</title>
+</head>
+
+<body>
+<div class="container">
+    <h2>Business Partner Groups</h2>
+    <input type="text" id="Policy-BPN" placeholder="Enter BPN" required> <br>
+    <input type="text" id="Business-Partner-Group" placeholder="Enter Business Partner Group" required> <br>
+    <button onclick="addBusinessPartnerGroup()" Add Business Partner Group />
+
+</div>
+
+<div id="toast" class="toast" > </div>
+
+<table>
+    <thead>
+    <tr>
+        <th>Policy BPN</th>
+        <th>Business Partner Group</th>
+    </tr>
+    </thead>
+    <tbody id="dataTableBody"></tbody>
+</table>
+
+
+<script>
+    async function addBusinessPartnerGroup(){
+        const policyBpn = document.getElementById('Policy-BPN').value;
+        const businessPartnerGroup = document.getElementById('Business-Partner-Group').value;
+        const toast = document.getElementById('toast');
+
+        if(!policyBpn || !businessPartnerGruop){
+            showToast("Please fill the required fields", true)
+            return;
+        }
+
+        const payload = {
+            "@context": { "tx": "https://w3id.org/tractusx/v0.0.1/ns/" },
+            "@id": policyBpn,
+            "tx:groups": [businessPartnerGroup]
+        };
+
+        try{
+            const response = await fetch('http://localhost:8080/api/v1/business-partner-groups', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if(response.ok){
+                showToast("Successfully added", false)
+                addToTable(policyBpn, businessPartnerGroup);
+            }
+            else {
+                showToast("Failed to add", true)
+            }
+        }
+        catch(error) {
+            console.error("Error:", error);
+            showToast("An error occurred", true);
+        }
+    }
+
+    async function addToTable(policyBpn, businessPartnerGroup){
+        const tableBody = document.getElementById('dataTableBody')
+        const row = document.createElement('tr');
+
+        const policyCell = document.createElement('td')
+        policyCell.textContent(policyBpn);
+
+        const groupCell = document.createElement('td')
+        groupCell.textContent(businessPartnerGroup)
+
+        row.appendChild(policyCell)
+        row.appendChild(groupCell)
+
+        tableBody.appendChild(row)
+
+        //Clear the input fields
+        document.getElementById("Policy-BPN").value="";
+        document.getElementById("Business-Partner-Group").value="";
+
+    }
+
+    function showToast(message, isError){
+        const toast = document.getElementById("toast")
+        toast.textContent = message
+        toast.className = "toast show"
+        if(isError){
+            toast.classList.add("error")
+        }
+        else{
+            toast.classList.remove("error")
+        }
+        setTimeout(()=>{
+            toast.className = toast.className.replace("show", "");
+        }, 3000);
+    }
+</script>
+
+</body>
+</html>
