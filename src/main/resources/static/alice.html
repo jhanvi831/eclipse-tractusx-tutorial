@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width initial-scale=1.0">
+    <title>Home</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .nav a{
+            color: black;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav a:hover{
+            color:white;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2" style="background-color: #9bd5ff; height: 100vh;">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showContent('businessPartnerGroup')" style="margin-top: 40px;">Business Partner Group</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showContent('assets')">Assets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Policies</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contract Definition</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Catalog Search</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contract Negotiation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showContent('transfers')">Transfers</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-md-9">
+                <div class="content p-3" id="contentArea">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+
+    function showContent(section){
+        const contentArea = document.getElementById("contentArea");
+        let content;
+
+        switch(section){
+            case 'businessPartnerGroup':
+                content = 'businessPartnerGroup.html'
+                break;
+            case 'assets':
+                content = 'asset.html'
+                break;
+            
+            default: 
+                content = 'businessPartnerGroup.html';
+                break;
+            
+        }
+
+        fetch(content)
+            .then(response => {
+                if(!response.ok){
+                    throw new Error("Page not found !")
+                }
+                return response.text();
+            })       
+            .then(html => {
+                contentArea.innerHTML = html;
+            })
+    }
+
+    document.addEventListener("DOMContentLoaded", function(){
+        showContent('businessPartnerGroup')
+    });
+
+
+
+    async function addBusinessPartnerGroup(){
+        const policyBpn = document.getElementById('Policy-BPN').value;
+        const businessPartnerGroup = document.getElementById('Business-Partner-Group').value;
+        const toast = document.getElementById('toast');
+
+        if(!policyBpn || !businessPartnerGroup){
+            showToast("Please fill the required fields", true)
+            return;
+        }
+
+        const payload = {
+            "@context": { "tx": "https://w3id.org/tractusx/v0.0.1/ns/" },
+            "@id": policyBpn,
+            "tx:groups": [businessPartnerGroup]
+        };
+
+        try{
+            const response = await fetch('http://localhost:8080/api/v1/business-partner-groups', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if(response.ok){
+                showToast("Successfully added", false)
+                document.getElementById("dataTableBody").innerHTML="";
+                addToTable(policyBpn, businessPartnerGroup);
+            }
+            else {
+                showToast("Failed to add", true)
+            }
+        }
+        catch(error) {
+            console.error("Error:", error);
+            showToast("An error occurred", true);
+        }
+    }
+
+    async function updateBusinessPartnerGroup() {
+        const updateBpn = document.getElementById("Update-Policy-BPN").value;
+        const updateGroup = document.getElementById("Update-Business-Partner-Group").value;
+
+        if(!updateBpn || !updateGroup){
+            showToast("Enter the values", true);
+            return;
+        }
+
+        const payload = {
+            "@context": { "tx": "https://w3id.org/tractusx/v0.0.1/ns/" },
+            "@id": updateBpn,
+            "tx:groups": [updateGroup]
+        };
+
+        try{
+            const response = await fetch('http://localhost:8080/api/v1/business-partner-groups',{
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            if(response.ok){
+                showToast("Successfully updated Business Partner Group", false)
+                document.getElementById("dataTableBody").innerHTML="";
+                addToTable(updateBpn, updateGroup);
+            }
+            else{
+                showToast("Error occurred while updating", true);
+            }
+
+        } catch(error) {
+            console.error("Error:", error);
+            showToast("Error occurred while updating", true);
+        }
+        
+    }
+
+    async function searchBusinessPartnerGroup(){
+        const bpn = document.getElementById("search-bpn").value;
+
+        if(!bpn){
+            showToast("Please enter BPN", true);
+            return;
+        }
+
+        try{
+            const response = await fetch(`http://localhost:8080/api/v1/business-partner-groups/${bpn}`);
+            
+            if(response.ok){
+                const data = await response.json();
+                document.getElementById("dataTableBody").innerHTML="";
+                addToTable(data["@id"], data["tx:groups"]);
+                showToast("Search completed, false");
+            }
+            else if(response.status === 500){
+                showToast("No data found for entered BPN", true);
+            }
+            else{
+                showToast("Error occurred", true);
+            }
+
+        }
+        catch(error){
+            console.error("Error:", error)
+            showToast("Error occurred", true);
+        }
+    }
+
+    async function addToTable(policyBpn, businessPartnerGroup){
+        const tableBody = document.getElementById('dataTableBody')
+        const tableContainer = document.getElementById('entireTable')
+        tableContainer.style.visibility='visible';
+        const row = document.createElement('tr');
+
+        const policyCell = document.createElement('td')
+        policyCell.textContent = policyBpn;
+
+        const groupCell = document.createElement('td')
+        groupCell.textContent = businessPartnerGroup;
+
+        row.appendChild(policyCell)
+        row.appendChild(groupCell)
+
+        tableBody.appendChild(row)
+
+        //Clear the input fields
+        document.getElementById("Policy-BPN").value="";
+        document.getElementById("Business-Partner-Group").value="";
+
+    }
+
+    function showToast(message, isError){
+        const toast = document.getElementById("toast")
+        toast.textContent = message
+        toast.className = "toast show"
+        if(isError){
+            toast.classList.add("error")
+        }
+        else{
+            toast.classList.remove("error")
+        }
+        setTimeout(()=>{
+            toast.className = toast.className.replace("show", "");
+        }, 3000);
+    }
+
+    function resetText(){
+        document.getElementById("assetJson").value = "";
+    }
+
+</script>
+
+</html>
