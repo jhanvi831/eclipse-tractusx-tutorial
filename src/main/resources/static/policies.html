@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width initial-scale=1.0">
-    <title>Assets</title>
+    <title>Policies</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -15,6 +15,7 @@
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
+            margin-right: 30px;
         }
 
         .container {
@@ -67,12 +68,19 @@
             background-color: #f44336;
         }
 
-        #assetTable {
+        #policyTable {
             visibility: hidden;
         }
 
-        #assetIdTable {
+        #policyIdTable {
             visibility: hidden;
+        }
+
+        .btn.btn-outline-success{
+            background-color: #e3f2fd;
+            margin-bottom: 30px;
+            height: 90px;
+            padding: 10px;
         }
     </style>
 </head>
@@ -83,93 +91,89 @@
         <div class="row d-flex align-items-center">
             <div class="col">
                 <button class="btn btn-outline-success flex-fill w-100" data-bs-toggle="modal"
-                    data-bs-target="#addAssetModal"
-                    style="background-color: #e3f2fd; height: 70px; margin-bottom: 30px; padding: 10px;">Add
-                    Asset</button>
+                    data-bs-target="#addPolicyModal">Add Access / Contract Policy</button>
             </div>
             <div class="col">
-                <button class="btn btn-outline-success flex-fill w-100" data-bs-target="#showAssetsModal"
-                    style="background-color: #e3f2fd; height: 70px; margin-bottom: 30px; padding: 10px;"
-                    onclick="fetchAssets()">Show All Assets</button>
+                <button class="btn btn-outline-success flex-fill w-100" data-bs-target="#showPolicyModal"
+                    onclick="fetchPolicies()">Show All Policies</button>
             </div>
             <div class="col">
-                <button class="btn btn-outline-success flex-fill w-100" id="searchAssetBtn" data-bs-toggle="modal"
-                    data-bs-target="#searchAssetModal"
-                    style="background-color: #e3f2fd; height: 70px; margin-bottom: 30px; padding: 10px;">Search Asset by
-                    ID</button>
+                <button class="btn btn-outline-success flex-fill w-100" id="searchPolicyBtn" data-bs-toggle="modal"
+                    data-bs-target="#searchPolicyModal">Search Policy by ID</button>
             </div>
             <div class="col">
-                <button class="btn btn-outline-success flex-fill w-150" id="deleteAssetBtn" data-bs-toggle="modal"
-                data-bs-target="#deleteAssetModal" style="background-color: #e3f2fd; height: 70px; margin-bottom: 30px; padding: 10px;">Delete Asset by
-                    ID</button>
+                <button class="btn btn-outline-success flex-fill w-150" id="deletePolicyBtn" data-bs-toggle="modal"
+                data-bs-target="#deletePolicyModal">Delete Policy by ID</button>
             </div>
         </div>
     </div>
 
-    <div class="container" id="assetTable">
-        <table style="width:100%">
+    <div class="container" id="policyTable">
+        <table style="width:120%">
             <thead>
                 <tr>
-                    <th>Asset Id</th>
-                    <th>Base URL</th>
+                    <th>Policy Id</th>
+                    <th>Left Operand</th>
+                    <th>Right Operand</th>
                 </tr>
             </thead>
-            <tbody id="assetDataTableBody"></tbody>
+            <tbody id="policyDataTableBody"></tbody>
         </table>
     </div>
 
 
-    <!-- Add asset modal -->
-    <div class="modal fade" id="addAssetModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="addAssetModalLabel" aria-hidden="true">
+    <!-- Add Policy modal -->
+    <div class="modal fade" id="addPolicyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="addPolicyModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="addAssetModalLabel">Add asset</h1>
+                    <h1 class="modal-title fs-5" id="addPolicyModalLabel">Add asset</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="addAssetForm">
-                        <label style="margin-bottom: 13px;" for="custom-json">Asset Data (Json format)</label>
+                    <form id="addPolicyForm">
+                        <label style="margin-bottom: 13px;" for="custom-json"> Policy Data (Json format)</label>
                         <textarea class="form-control" id="custom-json" rows="15"></textarea>
                     </form>
                 </div>
                 <div class="container d-flex align-items-center">
                     <button type="button" class="btn btn-secondary me-3" id="resetBtn"
                         onclick="resetText()">Reset</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="saveAssetBtn"
-                        onclick="saveAsset()">Save</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="savePolicyBtn"
+                        onclick="savePolicy()">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
 
-    <!-- Search asset by Id modal -->
-    <div class="modal fade" id="searchAssetModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="searchAssetModalLabel" aria-hidden="true">
+    <!-- Search policy by Id modal -->
+    <div class="modal fade" id="searchPolicyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="searchPolicyModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="searchAssetModalLabel">Search asset</h1>
+                    <h1 class="modal-title fs-5" id="searchPolicyModalLabel">Search policy</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="cotainer d-flex" style="margin-bottom: 20px;">
-                        <input type="text" class="form-control me-2" id="asset-id" placeholder="Enter Asset Id" required
+                        <input type="text" class="form-control me-2" id="policy-id" placeholder="Enter Policy Id" required
                             style="flex-basis: 100%;"> <br>
                     </div>
-                    <button class="btn btn-outline-success" onclick="searchAssetById()">Search</button>
+                    <button class="btn btn-outline-success" style="height:40px; padding:10px;" onclick="searchPolicyById()">Search Policy</button>
 
-                    <div class="container" id="assetIdTable">
-                        <table style="width:100%">
+                    <div class="container table-responsive" id="policyIdTable">
+                        <table class="table" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>Asset Id</th>
-                                    <th>Base URL</th>
+                                    <th>Policy Id</th>
+                                    <th>Left Operand</th>
+                                    <th>Right Operand</th>
                                 </tr>
                             </thead>
-                            <tbody id="assetDataTableBody"></tbody>
+                            <tbody id="policyDataTableBody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -177,21 +181,21 @@
         </div>
     </div>
 
-    <!-- Delete asset by Id modal -->
-    <div class="modal fade" id="deleteAssetModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="deleteAssetModalLabel" aria-hidden="true">
+    <!-- Delete policy by Id modal -->
+    <div class="modal fade" id="deletePolicyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="deletePolicyModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="deleteAssetModalLabel">Delete asset</h1>
+                    <h1 class="modal-title fs-5" id="deletePolicyModalLabel">Delete Policy</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="cotainer d-flex" style="margin-bottom: 20px;">
-                        <input type="text" class="form-control me-2" id="delete-asset-id" placeholder="Enter Asset Id" required
+                        <input type="text" class="form-control me-2" id="delete-policy-id" placeholder="Enter Policy Id" required
                             style="flex-basis: 100%;"> <br>
                     </div>
-                    <button class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteAssetById()">DELETE</button>
+                    <button class="btn btn-danger" data-bs-dismiss="modal" onclick="deletePolicyById()">DELETE</button>
                 </div>
             </div>
         </div>
