@@ -394,7 +394,6 @@ async function savePolicy() {
 }
 
 
-
 async function fetchPolicies() {
     try {
         const response = await fetch('http://localhost:8080/api/v1/policy/allPolicies', {
@@ -530,6 +529,183 @@ async function deletePolicyById() {
         }
         else if (response.status === 500) {
             showToast("Error deleting policy with entered id", true);
+        }
+        else {
+            showToast("Error occurred", true);
+        }
+
+    }
+    catch (error) {
+        console.error("Error:", error)
+        showToast("Error occurred", true);
+    }
+}
+
+
+async function saveContract() {
+    const contractData = document.getElementById('custom-json').value;
+
+    try{
+        // validate json is correct
+        const jsonData = JSON.parse(contractData); 
+
+        const response = await fetch('http://localhost:8080/api/v1/contract-definitions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify(jsonData)
+        });
+
+        if(response.ok){
+            showToast("Contract added successfully", false)
+        }
+        else{
+            showToast("Error occurred", true)
+        }
+    }
+    catch(error){
+        console.log("Error:", error)
+        showToast("Error occurred", true)
+    }
+}
+
+async function fetchContracts() {
+    try {
+        const response = await fetch('http://localhost:8080/api/v1/contract-definitions/allContracts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (response.ok) {
+            const contracts = await response.json()
+            displayContracts(contracts)
+        }
+        else {
+            console.error("Failed to fetch contracts")
+        }
+    }
+    catch (error) {
+        console.log("Error:", error)
+    }
+}
+
+function displayContracts(contracts) {
+    const tableBody = document.getElementById('contractDataTableBody');
+    const tableContainer = document.getElementById('contractTable')
+
+    if (tableContainer.style.visibility === 'visible') {
+        tableContainer.style.visibility = 'hidden';
+        tableBody.innerHTML = "";
+    }
+    else {
+        tableContainer.style.visibility = 'visible';
+        tableBody.innerHTML = '';
+
+        contracts.forEach(contract => {
+            const row = document.createElement('tr');
+
+            const idCell = document.createElement('td');
+            idCell.textContent = contract['@id'];
+
+            const accessPolicyIdCell = document.createElement('td');
+            accessPolicyIdCell.textContent = contract["accessPolicyId"];
+            
+            const contractPolicyCell = document.createElement('td');
+            contractPolicyCell.textContent = contract["contractPolicyId"]
+
+            const assetIdCell = document.createElement('td');
+            assetIdCell.textContent = contract["assetsSelector"]["operandRight"]
+
+            row.appendChild(idCell);
+            row.appendChild(accessPolicyIdCell);
+            row.appendChild(contractPolicyCell);
+            row.appendChild(assetIdCell);
+
+            tableBody.appendChild(row);
+
+        });
+    }
+}
+
+
+async function searchContractById() {
+    const contractId = document.getElementById("contract-id").value;
+
+    if (!contractId) {
+        showToast("Please enter contract definition id", true);
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/v1/contract-definitions/${contractId}`);
+
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById("contractTable").innerHTML = "";
+            addContractToTable(data['@id'], data["accessPolicyId"], data["contractPolicyId"]);
+            showToast("Search completed, false");
+        }
+        else if (response.status === 500) {
+            showToast("No data found for entered contract id", true);
+        }
+        else {
+            showToast("Error occurred", true);
+        }
+
+    }
+    catch (error) {
+        console.error("Error:", error)
+        showToast("Error occurred", true);
+    }
+}
+
+async function addContractToTable(contractId, accessPolicyId, contractPolicyId) {
+    const tableBody = document.getElementById('contractDataTableBody')
+    const tableContainer = document.getElementById('contractIdTable')
+    tableContainer.style.visibility = 'visible';
+
+    tableBody.innerHTML = "";
+
+    const row = document.createElement('tr');
+
+    const idCell = document.createElement('td');
+    idCell.textContent = contractId;
+
+    const accessPolicyCell = document.createElement('td');
+    accessPolicyCell.textContent = accessPolicyId;
+    
+    const contractPolicyCell = document.createElement('td');
+    contractPolicyCell.textContent = contractPolicyId;
+
+
+    row.appendChild(idCell);
+    row.appendChild(accessPolicyCell);
+    row.appendChild(contractPolicyCell);
+
+    tableBody.appendChild(row)
+
+    document.getElementById('contract-id').value = '';
+
+}
+
+async function deleteContractById() {
+    const contractId = document.getElementById("delete-contract-id").value;
+
+    if (!contractId) {
+        showToast("Please enter Contract id", true);
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/v1/contract-definitions/${contractId}`, {
+            method: "DELETE",
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (response.ok) {
+            showToast("Contract Definition Deleted Successfully", false);
+        }
+        else if (response.status === 500) {
+            showToast("Error deleting contract with entered id", true);
         }
         else {
             showToast("Error occurred", true);

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width initial-scale=1.0">
+    <title>Contract Definition</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin-right: 30px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px
+        }
+
+        input,
+        button {
+            max-width: 600px;
+            padding: 10px;
+            width: 100%;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+
+        }
+
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 4px;
+        }
+
+        .toast.show {
+            visibility: visible;
+        }
+
+        .toast.error {
+            background-color: #f44336;
+        }
+
+        #contractTable {
+            visibility: hidden;
+        }
+
+        #contractIdTable {
+            visibility: hidden;
+        }
+
+        .btn.btn-outline-success{
+            background-color: #e3f2fd;
+            margin-bottom: 30px;
+            height: 90px;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row d-flex align-items-center">
+            <div class="col">
+                <button class="btn btn-outline-success flex-fill w-100" data-bs-toggle="modal"
+                    data-bs-target="#addContractModal">Add Contract</button>
+            </div>
+            <div class="col">
+                <button class="btn btn-outline-success flex-fill w-100" data-bs-target="#showContractModal"
+                    onclick="fetchContracts()">Show All Contracts</button>
+            </div>
+            <div class="col">
+                <button class="btn btn-outline-success flex-fill w-100" id="searchContractBtn" data-bs-toggle="modal"
+                    data-bs-target="#searchContractModal">Search Contract by ID</button>
+            </div>
+            <div class="col">
+                <button class="btn btn-outline-success flex-fill w-150" id="deleteContractBtn" data-bs-toggle="modal"
+                data-bs-target="#deleteContractModal">Delete Contract by ID</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="contractTable">
+        <table style="width:120%">
+            <thead>
+                <tr>
+                    <th>Contract Id</th>
+                    <th>Access Policy Id</th>
+                    <th>Contract Policy Id</th>
+                    <th>Asset Id</th>
+                </tr>
+            </thead>
+            <tbody id="contractDataTableBody"></tbody>
+        </table>
+    </div>
+
+
+    <!-- Add contract modal -->
+    <div class="modal fade" id="addContractModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="addContractModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addContractModalLabel">Add asset</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addContractForm">
+                        <label style="margin-bottom: 13px;" for="custom-json"> Contract Definiton Data (Json format)</label>
+                        <textarea class="form-control" id="custom-json" rows="15"></textarea>
+                    </form>
+                </div>
+                <div class="container d-flex align-items-center">
+                    <button type="button" class="btn btn-secondary me-3" id="resetBtn"
+                        onclick="resetText()">Reset</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="saveContractBtn"
+                        onclick="saveContract()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Search contract by Id modal -->
+    <div class="modal fade" id="searchContractModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="searchContractModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="searchContractModalLabel">Search Contract</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="cotainer d-flex" style="margin-bottom: 20px;">
+                        <input type="text" class="form-control me-2" id="contract-id" placeholder="Enter Contract Id" required
+                            style="flex-basis: 100%;"> <br>
+                    </div>
+                    <button class="btn btn-outline-success" style="height:40px; padding:10px;" onclick="searchContractById()">Search</button>
+
+                    <div class="container table-responsive" id="contractIdTable">
+                        <table class="table" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Contract Id</th>
+                                    <th>Access Policy Id</th>
+                                    <th>Contract Policy Id</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contractDataTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete contract by Id modal -->
+    <div class="modal fade" id="deleteContractModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="deleteContractModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteContractModalLabel">Delete contract</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="cotainer d-flex" style="margin-bottom: 20px;">
+                        <input type="text" class="form-control me-2" id="delete-contract-id" placeholder="Enter Contract Id" required
+                            style="flex-basis: 100%;"> <br>
+                    </div>
+                    <button class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteContractById()">DELETE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"> </div>
+
+</body>
+
+</html>
