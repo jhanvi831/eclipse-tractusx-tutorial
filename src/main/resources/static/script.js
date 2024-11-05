@@ -83,6 +83,9 @@ async function addBusinessPartnerGroup() {
             document.getElementById("dataTableBody").innerHTML = "";
             addToTable(policyBpn, businessPartnerGroup);
         }
+        else if(response.status === 409){
+            showToast("BPN already exists", true)
+        }
         else {
             showToast("Failed to add", true)
         }
@@ -145,7 +148,7 @@ async function searchBusinessPartnerGroup() {
             const data = await response.json();
             document.getElementById("dataTableBody").innerHTML = "";
             addToTable(data["@id"], data["tx:groups"]);
-            showToast("Search completed, false");
+            showToast("Search completed", false);
         }
         else if (response.status === 500) {
             showToast("No data found for entered BPN", true);

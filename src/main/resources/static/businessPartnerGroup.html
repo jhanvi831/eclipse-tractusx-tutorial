@@ -65,20 +65,33 @@
             visibility: hidden;
         }
 
+        .container{
+            background-color: #0a3d62;
+        }
+
+        .btn.btn-outline-success{
+            background-color: #D9D9D9;
+            color: black;
+        }
+
+        .btn-outline-success:hover{
+            color:white;
+        }
+
+        #entireTable th, #entireTable td{
+            color:white;
+        }
 
     </style>
 </head>
 
 <body>
-    
-    <!-- <h5 style="text-align: center; margin-top: 20px; margin-bottom: 20px; font-weight: 600;">Business Partner Groups</h5> -->
-
-    <div class="container d-flex align-items-center" style="background-color: #e3f2fd; margin-top: 20px;">
+    <div class="container d-flex align-items-center" style="margin-top: 20px;">
         <input class="form-control me-2" type="text" id="search-bpn" placeholder="Enter BPN to search business-partner-groups" required style="flex-basis: 70%;">
         <button class="btn btn-outline-success" onclick="searchBusinessPartnerGroup()" style="flex-basis: 30%;">Search</button>
     </div>
 
-    <div class="container" style="background-color: #e3f2fd; margin-top: 30px">
+    <div class="container" style="margin-top: 30px">
         <div class="cotainer d-flex" style="margin-bottom: 20px;" >
             <input type="text" class="form-control me-2" id="Policy-BPN" placeholder="Enter BPN" required style="flex-basis: 60%;"> <br>
             <input type="text" class="form-control me-2" id="Business-Partner-Group" placeholder="Enter Business Partner Group" required> <br>
@@ -86,7 +99,7 @@
         <button class="btn btn-outline-success" onclick="addBusinessPartnerGroup()">Add Business Partner Group</button>
     </div>
 
-    <div class="container" style="background-color: #e3f2fd; margin-top: 30px">
+    <div class="container" style="margin-top: 30px">
         <div class="cotainer d-flex" style="margin-bottom: 20px;" >
             <input type="text" class="form-control me-2" id="Update-Policy-BPN" placeholder="Enter BPN" required style="flex-basis: 60%;"> <br>
             <input type="text" class="form-control me-2" id="Update-Business-Partner-Group" placeholder="Update Business Partner Group" required> <br>
@@ -96,7 +109,7 @@
 
     <div id="toast" class="toast" > </div>
 
-    <div class="container" id="entireTable" style="background-color: #e3f2fd; margin-top: 30px;">
+    <div class="container" id="entireTable" style="margin-top: 30px;">
         <table style="width:100%">
             <thead>
             <tr>

@@ -74,6 +74,33 @@
         #assetIdTable {
             visibility: hidden;
         }
+
+        @media (max-width: 768px) {
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-group .btn {
+                margin: 5px 0;
+                width: 100%;
+            }
+        }
+
+        .btn.btn-outline-success{
+            background-color: #06253b; 
+            height: 70px; 
+            margin-bottom: 30px; 
+            padding: 10px;
+        }
+
+        .btn-outline-success{
+            color: white;
+        }
+
+        .btn-outline-success:hover{
+            color: #FF7F50;
+        }
     </style>
 </head>
 
@@ -83,25 +110,19 @@
         <div class="row d-flex align-items-center">
             <div class="col">
                 <button class="btn btn-outline-success flex-fill w-100" data-bs-toggle="modal"
-                    data-bs-target="#addAssetModal"
-                    style="background-color: #e3f2fd; height: 70px; margin-bottom: 30px; padding: 10px;">Add
-                    Asset</button>
+                    data-bs-target="#addAssetModal">Add Asset</button>
             </div>
             <div class="col">
                 <button class="btn btn-outline-success flex-fill w-100" data-bs-target="#showAssetsModal"
-                    style="background-color: #e3f2fd; height: 70px; margin-bottom: 30px; padding: 10px;"
                     onclick="fetchAssets()">Show All Assets</button>
             </div>
             <div class="col">
                 <button class="btn btn-outline-success flex-fill w-100" id="searchAssetBtn" data-bs-toggle="modal"
-                    data-bs-target="#searchAssetModal"
-                    style="background-color: #e3f2fd; height: 70px; margin-bottom: 30px; padding: 10px;">Search Asset by
-                    ID</button>
+                    data-bs-target="#searchAssetModal">Search Asset by ID</button>
             </div>
             <div class="col">
                 <button class="btn btn-outline-success flex-fill w-150" id="deleteAssetBtn" data-bs-toggle="modal"
-                data-bs-target="#deleteAssetModal" style="background-color: #e3f2fd; height: 70px; margin-bottom: 30px; padding: 10px;">Delete Asset by
-                    ID</button>
+                data-bs-target="#deleteAssetModal">Delete Asset by ID</button>
             </div>
         </div>
     </div>
