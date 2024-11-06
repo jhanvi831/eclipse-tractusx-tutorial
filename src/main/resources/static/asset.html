@@ -102,6 +102,10 @@
         .btn-outline-success:hover {
             color: #FF7F50;
         }
+        
+        .form-label{
+            font-weight: bold;
+        }
 
     </style>
 </head>
@@ -147,19 +151,33 @@
         aria-labelledby="addAssetModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="addAssetModalLabel">Add asset</h1>
+                <div class="modal-header" style="background-color: #38aff9;">
+                    <h1 class="modal-title fs-5" id="addAssetModalLabel">ADD ASSET</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="addAssetForm">
-                        <label style="margin-bottom: 13px;" for="custom-json">Asset Data (Json format)</label>
-                        <textarea class="form-control" id="custom-json" rows="15"></textarea>
+
+                        <div class="mb-3">
+                            <label for="assetId" class="form-label">Asset Id</label>
+                            <input type="text" class="form-control" id="assetId" placeholder="enter asset id eg: 101" required>
+                          </div>
+
+                        <div class="mb-3">
+                          <label for="assetDescription" class="form-label">Description</label>
+                          <input type="text" class="form-control" id="assetDescription" placeholder="add description eg: Product EDC Demo Asset" required>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="baseUrl" class="form-label">Base URL</label>
+                          <input type="text" class="form-control" id="baseUrl" placeholder="enter base url eg: https://jsonplaceholder.typicode.com/todos" required>
+                        </div>
+
                     </form>
                 </div>
                 <div class="container d-flex align-items-center">
                     <button type="button" class="btn btn-secondary me-3" id="resetBtn"
-                        onclick="resetText()">Reset</button>
+                        onclick="resetText('addAssetForm')">Reset</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="saveAssetBtn"
                         onclick="saveAsset()">Save</button>
                 </div>
@@ -173,8 +191,8 @@
         aria-labelledby="searchAssetModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="searchAssetModalLabel">Search asset</h1>
+                <div class="modal-header" style="background-color: #198754;">
+                    <h1 class="modal-title fs-5" id="searchAssetModalLabel" style="color: white;">Search  Asset</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -182,7 +200,7 @@
                         <input type="text" class="form-control me-2" id="asset-id" placeholder="Enter Asset Id" required
                             style="flex-basis: 100%;"> <br>
                     </div>
-                    <button class="btn btn-outline-success" onclick="searchAssetById()">Search</button>
+                    <button class="btn btn-success" style="padding:7px;" onclick="searchAssetById()">Search</button>
 
                     <div class="container" id="assetIdTable">
                         <table style="width:100%">
@@ -205,8 +223,8 @@
         aria-labelledby="deleteAssetModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="deleteAssetModalLabel">Delete asset</h1>
+                <div class="modal-header" style="background-color: #dc3545;">
+                    <h1 class="modal-title fs-5" id="deleteAssetModalLabel" style="color: white">Delete asset</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

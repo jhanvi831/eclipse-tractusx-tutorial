@@ -96,6 +96,7 @@ async function queryCatalog() {
         if (response.ok) {
             const catalogs = await response.json()
             showToast('Catalog search successful', false);
+            console.log(catalogs);
             displayCatalog(catalogs);
         }
         else {
@@ -119,7 +120,7 @@ function displayCatalog(catalogs) {
         tableContainer.style.visibility = 'visible';
         tableBody.innerHTML = '';
 
-        const datasets = catalogs["dcat:dataset"];
+        const datasets = Array.isArray(catalogs["dcat:dataset"]) ? catalogs["dcat:dataset"] : [catalogs["dcat:dataset"]];
 
         datasets.forEach(dataset => {
             dataset["odrl:hasPolicy"].forEach(catalog => {

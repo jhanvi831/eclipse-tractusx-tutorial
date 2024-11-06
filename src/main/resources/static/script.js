@@ -201,21 +201,33 @@ function showToast(message, isError) {
   }, 3000);
 }
 
-function resetText() {
-  document.getElementById("custom-json").value = "";
+function resetText(formToReset) {
+  document.getElementById(formToReset).reset();
 }
 
 async function saveAsset() {
-  const assetData = document.getElementById("assetJson").value;
+  const assetId = document.getElementById("assetId").value;
+  const assetDescription = document.getElementById("assetDescription").value;
+  const baseUrl = document.getElementById("baseUrl").value;
+
+  payload = {
+    "@context": {},
+    "@id": assetId, 
+    "properties": {
+        "description": assetDescription || "Product EDC Demo Asset"
+    },
+    "dataAddress": {
+        "@type": "DataAddress",
+        "type": "HttpData",
+        "baseUrl": baseUrl
+    }
+}
 
   try {
-    // validate json is correct
-    const jsonData = JSON.parse(assetData);
-
     const response = await fetch("http://localhost:8080/api/v1/asset", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(jsonData),
+      body: JSON.stringify(payload),
     });
 
     if (response.ok) {
@@ -297,7 +309,7 @@ async function searchAssetById() {
       const data = await response.json();
       document.getElementById("assetTable").innerHTML = "";
       addAssetToTable(data["@id"], data.dataAddress.baseUrl);
-      showToast("Search completed, false");
+      showToast("Search completed", false);
     } else if (response.status === 404) {
       showToast("Asset Id not found", true);
     } else {
@@ -648,7 +660,7 @@ async function searchContractById() {
         data["accessPolicyId"],
         data["contractPolicyId"]
       );
-      showToast("Search completed, false");
+      showToast("Search completed", false);
     } else if (response.status === 404) {
       showToast("Contract Definiton with given Id not found", true);
     } else {
