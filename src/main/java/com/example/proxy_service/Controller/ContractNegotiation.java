@@ -14,17 +14,17 @@ public class ContractNegotiation {
     private ContractNegotiationService contractNegotiationService;
 
     @PostMapping
-    public Mono<ResponseEntity<String>> initiateContractNegotiation(@RequestBody String contractNegotiation){
+    public Mono<ResponseEntity<String>> initiateContractNegotiation(@RequestBody String contractNegotiation) {
         return contractNegotiationService.createContractNegotiation(contractNegotiation);
     }
 
     @PostMapping("/allNegotiations")
-    public Mono<ResponseEntity<String>> getAllNegotiations(){
+    public Mono<ResponseEntity<String>> getAllNegotiations() {
         return contractNegotiationService.getAllNegotiations();
     }
 
     @GetMapping("/{id}")
-    public Mono<ResponseEntity<String>> getNegotiationById(@PathVariable String id){
+    public Mono<ResponseEntity<String>> getNegotiationById(@PathVariable String id) {
         return contractNegotiationService.getNegotiationById(id);
     }
 }

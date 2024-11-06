@@ -95,7 +95,8 @@ async function queryCatalog() {
 
         if (response.ok) {
             const catalogs = await response.json()
-            displayCatalog(catalogs)
+            showToast('Catalog search successful', false);
+            displayCatalog(catalogs);
         }
         else {
             console.error("Failed to fetch catalogs")
@@ -144,24 +145,24 @@ function displayCatalog(catalogs) {
 async function initateNegotiation() {
     const negotiationData = document.getElementById('custom-json').value;
 
-    try{
+    try {
         // validate json is correct
-        const jsonData = JSON.parse(negotiationData); 
+        const jsonData = JSON.parse(negotiationData);
 
         const response = await fetch('http://localhost:8080/api/v1/contract-negotiations', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' }, 
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(jsonData)
         });
 
-        if(response.ok){
+        if (response.ok) {
             showToast("Negotiation initiated successfully", false)
         }
-        else{
+        else {
             showToast("Error occurred", true)
         }
     }
-    catch(error){
+    catch (error) {
         console.log("Error:", error)
         showToast("Error occurred", true)
     }
@@ -208,7 +209,7 @@ function displayNegotiation(negotiations) {
 
             const typeCell = document.createElement('td');
             typeCell.textContent = negotiation["type"];
-            
+
             const stateCell = document.createElement('td');
             stateCell.textContent = negotiation["state"]
 
@@ -250,17 +251,17 @@ async function searchNegotiationById() {
             const data = await response.json();
             document.getElementById("negotiationTable").innerHTML = "";
             addNegotiationToTable(
-                data['@id'], 
-                data["type"], 
+                data['@id'],
+                data["type"],
                 data["state"],
                 data["counterPartyId"],
-                data["contractAgreementId"], 
+                data["contractAgreementId"],
                 data["counterPartyAddress"]
             );
             showToast("Search completed, false");
         }
-        else if (response.status === 500) {
-            showToast("No data found for entered negotiation id", true);
+        else if (response.status === 404) {
+            showToast("Negotiation Id not found", true);
         }
         else {
             showToast("Error occurred", true);
@@ -283,29 +284,29 @@ async function addNegotiationToTable(negotiationId, type, state, counterPartyId,
     const row = document.createElement('tr');
 
     const idCell = document.createElement('td');
-            idCell.textContent = negotiationId;
+    idCell.textContent = negotiationId;
 
-            const typeCell = document.createElement('td');
-            typeCell.textContent = type;
-            
-            const stateCell = document.createElement('td');
-            stateCell.textContent = state;
+    const typeCell = document.createElement('td');
+    typeCell.textContent = type;
 
-            const counterPartyIdCell = document.createElement('td');
-            counterPartyIdCell.textContent = counterPartyId;
+    const stateCell = document.createElement('td');
+    stateCell.textContent = state;
 
-            const contractAgreementIdCell = document.createElement('td');
-            contractAgreementIdCell.textContent = contractAgreementId;
+    const counterPartyIdCell = document.createElement('td');
+    counterPartyIdCell.textContent = counterPartyId;
 
-            const counterPartyAddressCell = document.createElement('td');
-            counterPartyAddressCell.textContent = counterPartyAddress;
+    const contractAgreementIdCell = document.createElement('td');
+    contractAgreementIdCell.textContent = contractAgreementId;
 
-            row.appendChild(idCell);
-            row.appendChild(typeCell);
-            row.appendChild(stateCell);
-            row.appendChild(counterPartyIdCell);
-            row.appendChild(contractAgreementIdCell);
-            row.appendChild(counterPartyAddressCell);
+    const counterPartyAddressCell = document.createElement('td');
+    counterPartyAddressCell.textContent = counterPartyAddress;
+
+    row.appendChild(idCell);
+    row.appendChild(typeCell);
+    row.appendChild(stateCell);
+    row.appendChild(counterPartyIdCell);
+    row.appendChild(contractAgreementIdCell);
+    row.appendChild(counterPartyAddressCell);
 
     tableBody.appendChild(row)
 
@@ -317,24 +318,24 @@ async function addNegotiationToTable(negotiationId, type, state, counterPartyId,
 async function initateTransfer() {
     const transferData = document.getElementById('custom-json').value;
 
-    try{
+    try {
         // validate json is correct
-        const jsonData = JSON.parse(transferData); 
+        const jsonData = JSON.parse(transferData);
 
         const response = await fetch('http://localhost:8080/api/v1/transfers', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' }, 
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(jsonData)
         });
 
-        if(response.ok){
+        if (response.ok) {
             showToast("Transfer Process Initiated successfully", false)
         }
-        else{
+        else {
             showToast("Error occurred", true)
         }
     }
-    catch(error){
+    catch (error) {
         console.log("Error:", error)
         showToast("Error occurred", true)
     }
@@ -413,15 +414,15 @@ async function searchTransferById() {
             const data = await response.json();
             document.getElementById("transferTable").innerHTML = "";
             addTransferToTable(
-                data['@id'], 
+                data['@id'],
                 data["state"],
                 data["type"],
                 data["contractId"]
             );
             showToast("Search completed, false");
         }
-        else if (response.status === 500) {
-            showToast("No data found for entered transfer id", true);
+        else if (response.status === 404) {
+            showToast("Transfer Process id not found", true);
         }
         else {
             showToast("Error occurred", true);
@@ -444,21 +445,21 @@ async function addTransferToTable(transferId, state, type, contractId) {
     const row = document.createElement('tr');
 
     const idCell = document.createElement('td');
-            idCell.textContent = transferId;
+    idCell.textContent = transferId;
 
-            const stateCell = document.createElement('td');
-            stateCell.textContent = state;
+    const stateCell = document.createElement('td');
+    stateCell.textContent = state;
 
-            const typeCell = document.createElement('td');
-            typeCell.textContent = type;
+    const typeCell = document.createElement('td');
+    typeCell.textContent = type;
 
-            const contractIdCell = document.createElement('td');
-            contractIdCell.textContent = contractId;
+    const contractIdCell = document.createElement('td');
+    contractIdCell.textContent = contractId;
 
-            row.appendChild(idCell);
-            row.appendChild(stateCell);
-            row.appendChild(typeCell);
-            row.appendChild(contractIdCell);
+    row.appendChild(idCell);
+    row.appendChild(stateCell);
+    row.appendChild(typeCell);
+    row.appendChild(contractIdCell);
 
     tableBody.appendChild(row)
 

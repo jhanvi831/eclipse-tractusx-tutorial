@@ -14,22 +14,22 @@ public class Asset {
     private AssetService assetService;
 
     @PostMapping
-    public Mono<ResponseEntity<String>> createBusinessPartnerGroup(@RequestBody String asset){
+    public Mono<ResponseEntity<String>> createBusinessPartnerGroup(@RequestBody String asset) {
         return assetService.createAsset(asset);
     }
 
     @PostMapping("/allAssets")
-    public Mono<ResponseEntity<String>> getAllAssets(){
+    public Mono<ResponseEntity<String>> getAllAssets() {
         return assetService.getAllAssets();
     }
 
     @GetMapping("/{id}")
-    public Mono<ResponseEntity<String>> getAssetById(@PathVariable String id){
+    public Mono<ResponseEntity<String>> getAssetById(@PathVariable String id) {
         return assetService.getAssetById(id);
     }
 
     @DeleteMapping("/{id}")
-    public Mono<ResponseEntity<String>> deleteAssetById(@PathVariable String id){
+    public Mono<ResponseEntity<String>> deleteAssetById(@PathVariable String id) {
         return assetService.deleteAssetById(id);
     }
 

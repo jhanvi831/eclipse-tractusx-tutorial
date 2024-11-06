@@ -1,16 +1,20 @@
 package com.example.proxy_service.ClientService;
 
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class ContractDefinitionService {
 
-    private String PROVIDER_MANAGEMENT_URL = "http://localhost/alice/management/v2/contractdefinitions";
+    @Value("${provider-url}")
+    private String PROVIDER_MANAGEMENT_URL;
+
+    private String CONTRACT_DEFINITION_URL = "/v2/contractdefinitions";
 
     private final WebClient webClient;
 
@@ -18,52 +22,62 @@ public class ContractDefinitionService {
         this.webClient = webClient;
     }
 
-    public Mono<ResponseEntity<String>> createContract(String asset){
+    public Mono<ResponseEntity<String>> createContract(String asset) {
         return webClient
                 .post()
-                .uri(PROVIDER_MANAGEMENT_URL)
+                .uri(PROVIDER_MANAGEMENT_URL + CONTRACT_DEFINITION_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(asset)
                 .retrieve()
                 .toEntity(String.class)
-                .doOnError(error -> System.err.println(error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error Occured while adding contract"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println(error.getMessage()));
 
     }
 
     public Mono<ResponseEntity<String>> getAllContracts() {
         return webClient
                 .post()
-                .uri(PROVIDER_MANAGEMENT_URL + "/request")
+                .uri(PROVIDER_MANAGEMENT_URL + CONTRACT_DEFINITION_URL + "/request")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(body -> ResponseEntity.ok(body))
-                .doOnError(error -> System.err.println("Error occured: "+ error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error occured while fetching all contracts"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println("Error occured: " + error.getMessage()));
+
     }
 
     public Mono<ResponseEntity<String>> getContractsById(String id) {
         return webClient
                 .get()
-                .uri(PROVIDER_MANAGEMENT_URL + "/{id}", id)
+                .uri(PROVIDER_MANAGEMENT_URL + CONTRACT_DEFINITION_URL + "/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(body -> ResponseEntity.ok(body))
-                .doOnError(error -> System.err.println("Error occured: "+ error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error occured while fetching contract with id"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println("Error occured: " + error.getMessage()));
+
     }
 
     public Mono<ResponseEntity<String>> deleteContractsById(String id) {
         return webClient
                 .delete()
-                .uri(PROVIDER_MANAGEMENT_URL + "/{id}", id)
+                .uri(PROVIDER_MANAGEMENT_URL + CONTRACT_DEFINITION_URL + "/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(body -> ResponseEntity.ok(body))
-                .doOnError(error -> System.err.println("Error occured: "+ error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error occured while deleting contract"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println("Error occured: " + error.getMessage()));
     }
 }

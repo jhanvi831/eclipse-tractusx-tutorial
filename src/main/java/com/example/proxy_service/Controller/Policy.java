@@ -14,22 +14,22 @@ public class Policy {
     private PolicyService policyService;
 
     @PostMapping
-    public Mono<ResponseEntity<String>> createPolicy(@RequestBody String Policy){
+    public Mono<ResponseEntity<String>> createPolicy(@RequestBody String Policy) {
         return policyService.createPolicy(Policy);
     }
 
     @PostMapping("/allPolicies")
-    public Mono<ResponseEntity<String>> getAllPolicies(){
+    public Mono<ResponseEntity<String>> getAllPolicies() {
         return policyService.getAllPolicies();
     }
 
     @GetMapping("/{id}")
-    public Mono<ResponseEntity<String>> getPolicyById(@PathVariable String id){
+    public Mono<ResponseEntity<String>> getPolicyById(@PathVariable String id) {
         return policyService.getPolicyById(id);
     }
 
     @DeleteMapping("/{id}")
-    public Mono<ResponseEntity<String>> deletePolicyById(@PathVariable String id){
+    public Mono<ResponseEntity<String>> deletePolicyById(@PathVariable String id) {
         return policyService.deletePolicyById(id);
     }
 

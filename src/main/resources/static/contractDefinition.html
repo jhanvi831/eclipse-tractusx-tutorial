@@ -53,11 +53,11 @@
             text-align: center;
             padding: 16px;
             position: fixed;
-            z-index: 1;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
+            z-index: 1000;
+            top: 20px;
+            right: 20px;
             border-radius: 4px;
+            transition: opacity 0.3s ease-out;
         }
 
         .toast.show {
@@ -76,11 +76,32 @@
             visibility: hidden;
         }
 
-        .btn.btn-outline-success{
-            background-color: #e3f2fd;
+        @media (max-width: 768px) {
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-group .btn {
+                margin: 5px 0;
+                width: 100%;
+            }
+        }
+
+        .btn.btn-outline-success {
+            background-color: #06253b;
+            width: 200px;
+            height: 70px;
             margin-bottom: 30px;
-            height: 90px;
             padding: 10px;
+        }
+
+        .btn-outline-success {
+            color: white;
+        }
+
+        .btn-outline-success:hover {
+            color: #FF7F50;
         }
     </style>
 </head>
@@ -90,20 +111,20 @@
     <div class="container">
         <div class="row d-flex align-items-center">
             <div class="col">
-                <button class="btn btn-outline-success flex-fill w-100" data-bs-toggle="modal"
+                <button class="btn btn-outline-success flex-fill" data-bs-toggle="modal"
                     data-bs-target="#addContractModal">Add Contract</button>
             </div>
             <div class="col">
-                <button class="btn btn-outline-success flex-fill w-100" data-bs-target="#showContractModal"
+                <button class="btn btn-outline-success flex-fill" data-bs-target="#showContractModal"
                     onclick="fetchContracts()">Show All Contracts</button>
             </div>
             <div class="col">
-                <button class="btn btn-outline-success flex-fill w-100" id="searchContractBtn" data-bs-toggle="modal"
+                <button class="btn btn-outline-success flex-fill" id="searchContractBtn" data-bs-toggle="modal"
                     data-bs-target="#searchContractModal">Search Contract by ID</button>
             </div>
             <div class="col">
-                <button class="btn btn-outline-success flex-fill w-150" id="deleteContractBtn" data-bs-toggle="modal"
-                data-bs-target="#deleteContractModal">Delete Contract by ID</button>
+                <button class="btn btn-outline-success flex-fill" id="deleteContractBtn" data-bs-toggle="modal"
+                    data-bs-target="#deleteContractModal">Delete Contract by ID</button>
             </div>
         </div>
     </div>
@@ -134,7 +155,8 @@
                 </div>
                 <div class="modal-body">
                     <form id="addContractForm">
-                        <label style="margin-bottom: 13px;" for="custom-json"> Contract Definiton Data (Json format)</label>
+                        <label style="margin-bottom: 13px;" for="custom-json"> Contract Definiton Data (Json
+                            format)</label>
                         <textarea class="form-control" id="custom-json" rows="15"></textarea>
                     </form>
                 </div>
@@ -160,10 +182,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="cotainer d-flex" style="margin-bottom: 20px;">
-                        <input type="text" class="form-control me-2" id="contract-id" placeholder="Enter Contract Id" required
-                            style="flex-basis: 100%;"> <br>
+                        <input type="text" class="form-control me-2" id="contract-id" placeholder="Enter Contract Id"
+                            required style="flex-basis: 100%;"> <br>
                     </div>
-                    <button class="btn btn-outline-success" style="height:40px; padding:10px;" onclick="searchContractById()">Search</button>
+                    <button class="btn btn-outline-success" style="height:40px; padding:10px;"
+                        onclick="searchContractById()">Search</button>
 
                     <div class="container table-responsive" id="contractIdTable">
                         <table class="table" style="width:100%">
@@ -193,10 +216,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="cotainer d-flex" style="margin-bottom: 20px;">
-                        <input type="text" class="form-control me-2" id="delete-contract-id" placeholder="Enter Contract Id" required
-                            style="flex-basis: 100%;"> <br>
+                        <input type="text" class="form-control me-2" id="delete-contract-id"
+                            placeholder="Enter Contract Id" required style="flex-basis: 100%;"> <br>
                     </div>
-                    <button class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteContractById()">DELETE</button>
+                    <button class="btn btn-danger" data-bs-dismiss="modal"
+                        onclick="deleteContractById()">DELETE</button>
                 </div>
             </div>
         </div>

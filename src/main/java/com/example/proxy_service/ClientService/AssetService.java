@@ -1,16 +1,20 @@
 package com.example.proxy_service.ClientService;
 
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class AssetService {
 
-    private String PROVIDER_MANAGEMENT_URL = "http://localhost/alice/management/v3/assets";
+    @Value("${provider-url}")
+    private String PROVIDER_MANAGEMENT_URL;
+
+    private String ASSET_URL = "/v3/assets";
 
     private final WebClient webClient;
 
@@ -18,52 +22,60 @@ public class AssetService {
         this.webClient = webClient;
     }
 
-    public Mono<ResponseEntity<String>> createAsset(String asset){
+    public Mono<ResponseEntity<String>> createAsset(String asset) {
         return webClient
                 .post()
-                .uri(PROVIDER_MANAGEMENT_URL)
+                .uri(PROVIDER_MANAGEMENT_URL + ASSET_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(asset)
                 .retrieve()
                 .toEntity(String.class)
                 .doOnError(error -> System.err.println(error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error Occured while adding asset"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                });
 
     }
 
     public Mono<ResponseEntity<String>> getAllAssets() {
         return webClient
                 .post()
-                .uri(PROVIDER_MANAGEMENT_URL + "/request")
+                .uri(PROVIDER_MANAGEMENT_URL + ASSET_URL + "/request")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(body -> ResponseEntity.ok(body))
-                .doOnError(error -> System.err.println("Error occured: "+ error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error occured while fetching all assets"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println("Error occured: " + error.getMessage()));
     }
 
     public Mono<ResponseEntity<String>> getAssetById(String id) {
         return webClient
                 .get()
-                .uri(PROVIDER_MANAGEMENT_URL + "/{id}", id)
+                .uri(PROVIDER_MANAGEMENT_URL + ASSET_URL + "/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(body -> ResponseEntity.ok(body))
-                .doOnError(error -> System.err.println("Error occured: "+ error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error occured while fetching asset with id"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println("Error occured: " + error.getMessage()));
     }
 
     public Mono<ResponseEntity<String>> deleteAssetById(String id) {
         return webClient
                 .delete()
-                .uri(PROVIDER_MANAGEMENT_URL + "/{id}", id)
+                .uri(PROVIDER_MANAGEMENT_URL + ASSET_URL + "/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(body -> ResponseEntity.ok(body))
-                .doOnError(error -> System.err.println("Error occured: "+ error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error occured while deleting asset"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println("Error occured: " + error.getMessage()));
     }
 }

@@ -12,7 +12,7 @@ public class WebClientConfig {
     private String apiKey;
 
     @Bean
-    public WebClient webClient(WebClient.Builder builder){
+    public WebClient webClient(WebClient.Builder builder) {
         return builder
                 .defaultHeader("x-api-key", apiKey)
                 .build();

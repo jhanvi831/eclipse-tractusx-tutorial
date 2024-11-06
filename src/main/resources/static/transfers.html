@@ -53,11 +53,11 @@
             text-align: center;
             padding: 16px;
             position: fixed;
-            z-index: 1;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
+            z-index: 1000;
+            top: 20px;
+            right: 20px;
             border-radius: 4px;
+            transition: opacity 0.3s ease-out;
         }
 
         .toast.show {
@@ -77,11 +77,31 @@
             visibility: hidden;
         }
 
+        @media (max-width: 768px) {
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-group .btn {
+                margin: 5px 0;
+                width: 100%;
+            }
+        }
+
         .btn.btn-outline-success {
-            background-color: #e3f2fd;
-            margin-bottom: 30px;
+            background-color: #06253b;
+            width: 170px;
             height: 90px;
-            padding: 10px;
+            padding: 20px;
+        }
+
+        .btn-outline-success {
+            color: white;
+        }
+
+        .btn-outline-success:hover {
+            color: #FF7F50;
         }
     </style>
 </head>
@@ -91,15 +111,15 @@
     <div class="container">
         <div class="row d-flex align-items-center">
             <div class="col">
-                <button class="btn btn-outline-success flex-fill w-100" data-bs-toggle="modal"
+                <button class="btn btn-outline-success flex-fill" data-bs-toggle="modal"
                     data-bs-target="#initiateTransferModal">Initiate Transfer</button>
             </div>
             <div class="col">
-                <button class="btn btn-outline-success flex-fill w-100" data-bs-target="#showTransferModal"
+                <button class="btn btn-outline-success flex-fill" data-bs-target="#showTransferModal"
                     onclick="fetchTransfers()">Show All Transfers</button>
             </div>
             <div class="col">
-                <button class="btn btn-outline-success flex-fill w-100" id="searchTransferBtn" data-bs-toggle="modal"
+                <button class="btn btn-outline-success flex-fill" id="searchTransferBtn" data-bs-toggle="modal"
                     data-bs-target="#searchTransferModal">Search Transfer by ID</button>
             </div>
         </div>
@@ -121,8 +141,8 @@
 
 
     <!-- Initiate transfer modal -->
-    <div class="modal fade" id="initiateTransferModal" data-bs-backdrop="static" data-bs-keyboard="false"
-        tabindex="-1" aria-labelledby="transferLabel" aria-hidden="true">
+    <div class="modal fade" id="initiateTransferModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="transferLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -158,8 +178,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="cotainer d-flex" style="margin-bottom: 20px;">
-                        <input type="text" class="form-control me-2" id="transfer-id"
-                            placeholder="Enter Transfer Id" required style="flex-basis: 100%;"> <br>
+                        <input type="text" class="form-control me-2" id="transfer-id" placeholder="Enter Transfer Id"
+                            required style="flex-basis: 100%;"> <br>
                     </div>
                     <button class="btn btn-outline-success" style="height:40px; padding:10px;"
                         onclick="searchTransferById()">Search</button>
@@ -169,9 +189,9 @@
                             <thead>
                                 <tr>
                                     <th>Transfer Process Id</th>
-                    <th>State</th>
-                    <th>Type</th>
-                    <th>Contract Id</th>
+                                    <th>State</th>
+                                    <th>Type</th>
+                                    <th>Contract Id</th>
                                 </tr>
                             </thead>
                             <tbody id="transferDataTableBody"></tbody>

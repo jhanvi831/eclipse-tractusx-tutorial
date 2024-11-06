@@ -1,16 +1,20 @@
 package com.example.proxy_service.ClientService;
 
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class PolicyService {
 
-    private String PROVIDER_MANAGEMENT_URL = "http://localhost/alice/management/v2/policydefinitions";
+    @Value("${provider-url}")
+    private String PROVIDER_MANAGEMENT_URL;
+
+    private String POLICY_URL = "/v2/policydefinitions";
 
     private final WebClient webClient;
 
@@ -18,52 +22,63 @@ public class PolicyService {
         this.webClient = webClient;
     }
 
-    public Mono<ResponseEntity<String>> createPolicy(String asset){
+    public Mono<ResponseEntity<String>> createPolicy(String asset) {
         return webClient
                 .post()
-                .uri(PROVIDER_MANAGEMENT_URL)
+                .uri(PROVIDER_MANAGEMENT_URL + POLICY_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(asset)
                 .retrieve()
                 .toEntity(String.class)
-                .doOnError(error -> System.err.println(error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error Occured while adding policy"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println(error.getMessage()));
 
     }
 
     public Mono<ResponseEntity<String>> getAllPolicies() {
         return webClient
                 .post()
-                .uri(PROVIDER_MANAGEMENT_URL + "/request")
+                .uri(PROVIDER_MANAGEMENT_URL + POLICY_URL + "/request")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(body -> ResponseEntity.ok(body))
-                .doOnError(error -> System.err.println("Error occured: "+ error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error occured while fetching all policies"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println("Error occured: " + error.getMessage()));
+
     }
 
     public Mono<ResponseEntity<String>> getPolicyById(String id) {
         return webClient
                 .get()
-                .uri(PROVIDER_MANAGEMENT_URL + "/{id}", id)
+                .uri(PROVIDER_MANAGEMENT_URL + POLICY_URL + "/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(body -> ResponseEntity.ok(body))
-                .doOnError(error -> System.err.println("Error occured: "+ error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error occured while fetching policy with id"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println("Error occured: " + error.getMessage()));
+
     }
 
     public Mono<ResponseEntity<String>> deletePolicyById(String id) {
         return webClient
                 .delete()
-                .uri(PROVIDER_MANAGEMENT_URL + "/{id}", id)
+                .uri(PROVIDER_MANAGEMENT_URL + POLICY_URL + "/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(body -> ResponseEntity.ok(body))
-                .doOnError(error -> System.err.println("Error occured: "+ error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error occured while deleting policy"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println("Error occured: " + error.getMessage()));
+
     }
 }

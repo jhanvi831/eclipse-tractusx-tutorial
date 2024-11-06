@@ -14,17 +14,17 @@ public class InitiateTransfer {
     private InitiateTransferService initiateTransferService;
 
     @PostMapping
-    public Mono<ResponseEntity<String>> initiateContractNegotiation(@RequestBody String contractNegotiation){
+    public Mono<ResponseEntity<String>> initiateContractNegotiation(@RequestBody String contractNegotiation) {
         return initiateTransferService.initiateTransfer(contractNegotiation);
     }
 
     @PostMapping("/allTransfers")
-    public Mono<ResponseEntity<String>> getAllTransfers(){
+    public Mono<ResponseEntity<String>> getAllTransfers() {
         return initiateTransferService.getAllTransfers();
     }
 
     @GetMapping("/{id}")
-    public Mono<ResponseEntity<String>> getTransfersById(@PathVariable String id){
+    public Mono<ResponseEntity<String>> getTransfersById(@PathVariable String id) {
         return initiateTransferService.getTransfersById(id);
     }
 }

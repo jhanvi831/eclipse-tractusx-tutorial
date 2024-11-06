@@ -1,15 +1,19 @@
 package com.example.proxy_service.ClientService;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 @Service
 public class ContractNegotiationService {
 
-    private String CONSUMER_MANAGEMENT_URL = "http://localhost/bob/management";
+    @Value("${consumer-url}")
+    private String CONSUMER_MANAGEMENT_URL;
+
     private String NEGOTIATION = "/v2/contractnegotiations";
 
     private final WebClient webClient;
@@ -26,8 +30,10 @@ public class ContractNegotiationService {
                 .bodyValue(contractNegotiation)
                 .retrieve()
                 .toEntity(String.class)
-                .doOnError(error -> System.err.println(error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error Occured while adding negotiation"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println(error.getMessage()));
     }
 
     public Mono<ResponseEntity<String>> getAllNegotiations() {
@@ -38,8 +44,11 @@ public class ContractNegotiationService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(body -> ResponseEntity.ok(body))
-                .doOnError(error -> System.err.println("Error occured: "+ error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error occured while fetching all negotiations"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println("Error occured: " + error.getMessage()));
+
     }
 
     public Mono<ResponseEntity<String>> getNegotiationById(String id) {
@@ -50,7 +59,10 @@ public class ContractNegotiationService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(body -> ResponseEntity.ok(body))
-                .doOnError(error -> System.err.println("Error occured: "+ error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error occured while fetching negotiation with id"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println("Error occured: " + error.getMessage()));
+
     }
 }

@@ -53,11 +53,11 @@
             text-align: center;
             padding: 16px;
             position: fixed;
-            z-index: 1;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
+            z-index: 1000;
+            top: 20px;
+            right: 20px;
             border-radius: 4px;
+            transition: opacity 0.3s ease-out;
         }
 
         .toast.show {
@@ -72,11 +72,33 @@
             visibility: hidden;
         }
 
+        @media (max-width: 768px) {
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-group .btn {
+                margin: 5px 0;
+                width: 100%;
+            }
+        }
+
         .btn.btn-outline-success {
-            background-color: #e3f2fd;
+            background-color: #06253b;
+            width: 400px;
+            height: 70px;
             margin-bottom: 30px;
-            height: 90px;
             padding: 10px;
+            margin-left: 100px;
+        }
+
+        .btn-outline-success {
+            color: white;
+        }
+
+        .btn-outline-success:hover {
+            color: #FF7F50;
         }
     </style>
 </head>
@@ -86,8 +108,8 @@
     <div class="container">
         <div class="row d-flex align-items-center">
             <div class="col">
-                <button class="btn btn-outline-success flex-fill w-100" 
-                data-bs-target="#catalogModal" onclick="queryCatalog()">Query Catalog</button>
+                <button class="btn btn-outline-success flex-fill" data-bs-target="#catalogModal"
+                    onclick="queryCatalog()">Query Catalog</button>
             </div>
         </div>
     </div>

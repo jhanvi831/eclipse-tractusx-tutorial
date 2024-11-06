@@ -53,11 +53,11 @@
             text-align: center;
             padding: 16px;
             position: fixed;
-            z-index: 1;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
+            z-index: 1000;
+            top: 20px;
+            right: 20px;
             border-radius: 4px;
+            transition: opacity 0.3s ease-out;
         }
 
         .toast.show {
@@ -76,11 +76,32 @@
             visibility: hidden;
         }
 
-        .btn.btn-outline-success{
-            background-color: #e3f2fd;
+        @media (max-width: 768px) {
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-group .btn {
+                margin: 5px 0;
+                width: 100%;
+            }
+        }
+
+        .btn.btn-outline-success {
+            background-color: #06253b;
+            width: 200px;
+            height: 70px;
             margin-bottom: 30px;
-            height: 90px;
             padding: 10px;
+        }
+
+        .btn-outline-success {
+            color: white;
+        }
+
+        .btn-outline-success:hover {
+            color: #FF7F50;
         }
     </style>
 </head>
@@ -90,20 +111,20 @@
     <div class="container">
         <div class="row d-flex align-items-center">
             <div class="col">
-                <button class="btn btn-outline-success flex-fill w-100" data-bs-toggle="modal"
+                <button class="btn btn-outline-success flex-fill" data-bs-toggle="modal"
                     data-bs-target="#addPolicyModal">Add Access / Contract Policy</button>
             </div>
             <div class="col">
-                <button class="btn btn-outline-success flex-fill w-100" data-bs-target="#showPolicyModal"
+                <button class="btn btn-outline-success flex-fill" data-bs-target="#showPolicyModal"
                     onclick="fetchPolicies()">Show All Policies</button>
             </div>
             <div class="col">
-                <button class="btn btn-outline-success flex-fill w-100" id="searchPolicyBtn" data-bs-toggle="modal"
+                <button class="btn btn-outline-success flex-fill" id="searchPolicyBtn" data-bs-toggle="modal"
                     data-bs-target="#searchPolicyModal">Search Policy by ID</button>
             </div>
             <div class="col">
-                <button class="btn btn-outline-success flex-fill w-150" id="deletePolicyBtn" data-bs-toggle="modal"
-                data-bs-target="#deletePolicyModal">Delete Policy by ID</button>
+                <button class="btn btn-outline-success flex-fill" id="deletePolicyBtn" data-bs-toggle="modal"
+                    data-bs-target="#deletePolicyModal">Delete Policy by ID</button>
             </div>
         </div>
     </div>
@@ -159,10 +180,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="cotainer d-flex" style="margin-bottom: 20px;">
-                        <input type="text" class="form-control me-2" id="policy-id" placeholder="Enter Policy Id" required
-                            style="flex-basis: 100%;"> <br>
+                        <input type="text" class="form-control me-2" id="policy-id" placeholder="Enter Policy Id"
+                            required style="flex-basis: 100%;"> <br>
                     </div>
-                    <button class="btn btn-outline-success" style="height:40px; padding:10px;" onclick="searchPolicyById()">Search Policy</button>
+                    <button class="btn btn-outline-success" style="height:40px; padding:10px;"
+                        onclick="searchPolicyById()">Search Policy</button>
 
                     <div class="container table-responsive" id="policyIdTable">
                         <table class="table" style="width:100%">
@@ -192,8 +214,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="cotainer d-flex" style="margin-bottom: 20px;">
-                        <input type="text" class="form-control me-2" id="delete-policy-id" placeholder="Enter Policy Id" required
-                            style="flex-basis: 100%;"> <br>
+                        <input type="text" class="form-control me-2" id="delete-policy-id" placeholder="Enter Policy Id"
+                            required style="flex-basis: 100%;"> <br>
                     </div>
                     <button class="btn btn-danger" data-bs-dismiss="modal" onclick="deletePolicyById()">DELETE</button>
                 </div>

@@ -1,16 +1,19 @@
 package com.example.proxy_service.ClientService;
 
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class InitiateTransferService {
 
-    private String CONSUMER_MANAGEMENT_URL = "http://localhost/bob/management";
+    @Value("${consumer-url}")
+    private String CONSUMER_MANAGEMENT_URL;
+
     private String TRANSFER = "/v2/transferprocesses";
 
     private final WebClient webClient;
@@ -19,7 +22,7 @@ public class InitiateTransferService {
         this.webClient = webClient;
     }
 
-    public Mono<ResponseEntity<String>> initiateTransfer(String asset){
+    public Mono<ResponseEntity<String>> initiateTransfer(String asset) {
         return webClient
                 .post()
                 .uri(CONSUMER_MANAGEMENT_URL + TRANSFER)
@@ -27,8 +30,10 @@ public class InitiateTransferService {
                 .bodyValue(asset)
                 .retrieve()
                 .toEntity(String.class)
-                .doOnError(error -> System.err.println(error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error Occured while initiating transfer"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println(error.getMessage()));
 
     }
 
@@ -40,8 +45,10 @@ public class InitiateTransferService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(body -> ResponseEntity.ok(body))
-                .doOnError(error -> System.err.println("Error occured: "+ error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error occured while fetching all transfers"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println("Error occured: " + error.getMessage()));
     }
 
     public Mono<ResponseEntity<String>> getTransfersById(String id) {
@@ -52,7 +59,10 @@ public class InitiateTransferService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(body -> ResponseEntity.ok(body))
-                .doOnError(error -> System.err.println("Error occured: "+ error.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body("Error occured while fetching contract with id"));
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println("Error occured: " + error.getMessage()));
+
     }
 }

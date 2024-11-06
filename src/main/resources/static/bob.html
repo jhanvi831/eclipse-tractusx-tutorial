@@ -17,27 +17,54 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        .nav a{
-            color: black;
+        .nav a {
+            color: white;
             margin-top: 20px;
             margin-bottom: 20px;
         }
 
-        .nav a:hover{
-            color:white;
+        .nav a:hover {
+            color: #FF7F50;
         }
 
+        @media (max-width: 768px) {
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-group .btn {
+                margin: 5px 0;
+                width: 100%;
+            }
+        }
+
+        .bg-custom {
+            background-color: #06253b
+        }
     </style>
 
 </head>
 
 <body>
+
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-2" style="background-color: #9bd5ff; height: 100vh;">
+            <nav class="navbar navbar-expand-md navbar-dark bg-custom d-md-none">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+            </nav>
+
+            <div class="col-md-2 d-md-block collapse" id="navbarTogglerDemo03"
+                style="background-color: #06253b; height: 100vh;">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="showContent('businessPartnerGroup')" style="margin-top: 40px;">Business Partner Group</a>
+                        <a class="nav-link" href="#" onclick="showContent('businessPartnerGroup')"
+                            style="margin-top: 40px;">Business Partner Group</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Assets</a>
@@ -52,7 +79,8 @@
                         <a class="nav-link" href="#" onclick="showContent('catalog')">Catalog Search</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="showContent('contractNegotiation')">Contract Negotiation</a>
+                        <a class="nav-link" href="#" onclick="showContent('contractNegotiation')">Contract
+                            Negotiation</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" onclick="showContent('transfers')">Transfers</a>
@@ -66,8 +94,8 @@
             </div>
         </div>
     </div>
-
-    <script src="bobScript.js"></script>
-
 </body>
+
+<script src="script.js"></script>
+
 </html>
