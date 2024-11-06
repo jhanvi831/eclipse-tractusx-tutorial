@@ -153,10 +153,24 @@
                 </div>
                 <div class="modal-body">
                     <form id="addnegotiationForm">
-                        <!-- <label style="margin-bottom: 13px;" for="custom-json"> Contract Negotiation Data (Json
-                            format)</label>
-                        <textarea class="form-control" id="custom-json" rows="15"></textarea> -->
 
+                        <div class="mb-3">
+                            <label for="offerId-nego" class="form-label">Offer Id</label>
+                            <input type="text" class="form-control" id="offerId-nego"
+                                placeholder="enter offer id" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="assetId-negotiation" class="form-label">Asset Id</label>
+                            <input type="text" class="form-control" id="assetId-negotiation"
+                                placeholder="enter asset id" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="business-partner-nego" class="form-label">Business Partner groups</label>
+                            <input type="text" class="form-control" id="business-partner-nego"
+                                placeholder="enter business partner groups" required>
+                        </div>
 
                     </form>
                 </div>
@@ -164,7 +178,7 @@
                     <button type="button" class="btn btn-secondary me-3" id="resetBtn"
                         onclick="resetText('addnegotiationForm')">Reset</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="saveNegotiationBtn"
-                        onclick="initateNegotiation()">Save</button>
+                        onclick="initateNegotiation()">Start Negotiation</button>
                 </div>
             </div>
         </div>

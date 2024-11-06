@@ -68,8 +68,8 @@ function showToast(message, isError) {
     }, 3000);
 }
 
-function resetText() {
-    document.getElementById("custom-json").value = "";
+function resetText(formToReset) {
+    document.getElementById(formToReset).reset();
 }
 
 async function queryCatalog() {
@@ -144,16 +144,52 @@ function displayCatalog(catalogs) {
 }
 
 async function initateNegotiation() {
-    const negotiationData = document.getElementById('custom-json').value;
+    const offerId = document.getElementById('offerId-nego').value;
+    const assetId = document.getElementById('assetId-negotiation').value;
+    const businessPartner = document.getElementById('business-partner-nego').value;
 
     try {
-        // validate json is correct
-        const jsonData = JSON.parse(negotiationData);
+        
+        payload = {
+            "@context": {
+                "odrl": "http://www.w3.org/ns/odrl/2/"
+            },
+            "@type": "NegotiationInitiateRequestDto",
+            "connectorAddress": "http://alice-controlplane:8084/api/v1/dsp",
+            "protocol": "dataspace-protocol-http",
+            "connectorId": "BPNL000000000001",
+            "providerId": "BPNL000000000001",
+            "offer": {
+                "offerId": offerId,
+                "assetId": assetId,
+                "policy": {
+                    "@type": "odrl:Set",
+                    "odrl:permission": {
+                        "odrl:target": assetId,
+                        "odrl:action": {
+                            "odrl:type": "USE"
+                        },
+                        "odrl:constraint": {
+                    "odrl:or": {
+                      "odrl:leftOperand": "https://w3id.org/tractusx/v0.0.1/ns/BusinessPartnerGroup",
+                      "odrl:operator": {
+                        "@id": "odrl:eq"
+                      },
+                      "odrl:rightOperand": businessPartner
+                    }
+                  }
+                    },
+                    "odrl:prohibition": [],
+                    "odrl:obligation": [],
+                    "odrl:target": assetId
+                }
+            }
+        }
 
         const response = await fetch('http://localhost:8080/api/v1/contract-negotiations', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(jsonData)
+            body: JSON.stringify(payload)
         });
 
         if (response.ok) {
@@ -259,7 +295,7 @@ async function searchNegotiationById() {
                 data["contractAgreementId"],
                 data["counterPartyAddress"]
             );
-            showToast("Search completed, false");
+            showToast("Search completed", false);
         }
         else if (response.status === 404) {
             showToast("Negotiation Id not found", true);
@@ -317,16 +353,36 @@ async function addNegotiationToTable(negotiationId, type, state, counterPartyId,
 
 
 async function initateTransfer() {
-    const transferData = document.getElementById('custom-json').value;
+    const agreementId = document.getElementById('agreementId-transfer').value;
+    const assetId = document.getElementById('assetId-transfer').value;
+
+    payload = {
+        "@context": {
+            "odrl": "http://www.w3.org/ns/odrl/2/"
+        },
+        "assetId": assetId,
+        "connectorAddress": "http://alice-controlplane:8084/api/v1/dsp",
+        "connectorId": "BPNL000000000001",
+        "contractId": agreementId,
+        "dataDestination": {
+            "type": "HttpProxy"
+        },
+        "privateProperties": {
+            "receiverHttpEndpoint": "http://backend:8080"
+        },
+        "protocol": "dataspace-protocol-http",
+        "transferType": {
+            "contentType": "application/octet-stream",
+            "isFinite": true
+        }
+    }
 
     try {
-        // validate json is correct
-        const jsonData = JSON.parse(transferData);
 
         const response = await fetch('http://localhost:8080/api/v1/transfers', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(jsonData)
+            body: JSON.stringify(payload)
         });
 
         if (response.ok) {
@@ -420,7 +476,7 @@ async function searchTransferById() {
                 data["type"],
                 data["contractId"]
             );
-            showToast("Search completed, false");
+            showToast("Search completed", false);
         }
         else if (response.status === 404) {
             showToast("Transfer Process id not found", true);

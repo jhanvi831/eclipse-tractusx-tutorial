@@ -145,22 +145,32 @@
         aria-labelledby="transferLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" style="background-color: #38aff9;">
                     <h1 class="modal-title fs-5" id="transferLabel">Initiate Negotiation</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="addTransferForm">
-                        <label style="margin-bottom: 13px;" for="custom-json">Initiate Transfer Data (Json
-                            format)</label>
-                        <textarea class="form-control" id="custom-json" rows="15"></textarea>
+
+                        <div class="mb-3">
+                            <label for="agreementId-transfer" class="form-label">Agreement Id</label>
+                            <input type="text" class="form-control" id="agreementId-transfer"
+                                placeholder="enter agreement id" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="assetId-transfer" class="form-label">Asset Id</label>
+                            <input type="text" class="form-control" id="assetId-transfer"
+                                placeholder="enter asset id" required>
+                        </div>
+                       
                     </form>
                 </div>
                 <div class="container d-flex align-items-center">
                     <button type="button" class="btn btn-secondary me-3" id="resetBtn"
-                        onclick="resetText()">Reset</button>
+                        onclick="resetText('addTransferForm')">Reset</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="saveTransferBtn"
-                        onclick="initateTransfer()">Save</button>
+                        onclick="initateTransfer()">Initiate Transfer</button>
                 </div>
             </div>
         </div>
@@ -172,8 +182,8 @@
         aria-labelledby="searchTransferModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="searchTransferModalLabel">Search Transfer</h1>
+                <div class="modal-header" style="background-color: #198754;">
+                    <h1 class="modal-title fs-5" id="searchTransferModalLabel" style="color: white;">Search Transfer Process</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -181,7 +191,7 @@
                         <input type="text" class="form-control me-2" id="transfer-id" placeholder="Enter Transfer Id"
                             required style="flex-basis: 100%;"> <br>
                     </div>
-                    <button class="btn btn-outline-success" style="height:40px; padding:10px;"
+                    <button class="btn btn-success" style="padding:10px;"
                         onclick="searchTransferById()">Search</button>
 
                     <div class="container table-responsive" id="transferIdTable">
