@@ -147,20 +147,22 @@
         tabindex="-1" aria-labelledby="negotiationLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" style="background-color: #38aff9;">
                     <h1 class="modal-title fs-5" id="negotiationLabel">Initiate Negotiation</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="addnegotiationForm">
-                        <label style="margin-bottom: 13px;" for="custom-json"> Contract Negotiation Data (Json
+                        <!-- <label style="margin-bottom: 13px;" for="custom-json"> Contract Negotiation Data (Json
                             format)</label>
-                        <textarea class="form-control" id="custom-json" rows="15"></textarea>
+                        <textarea class="form-control" id="custom-json" rows="15"></textarea> -->
+
+
                     </form>
                 </div>
                 <div class="container d-flex align-items-center">
                     <button type="button" class="btn btn-secondary me-3" id="resetBtn"
-                        onclick="resetText()">Reset</button>
+                        onclick="resetText('addnegotiationForm')">Reset</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="saveNegotiationBtn"
                         onclick="initateNegotiation()">Save</button>
                 </div>
@@ -174,8 +176,8 @@
         aria-labelledby="searchNegotiationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="searchNegotiationModalLabel">Search Contract Negotiation</h1>
+                <div class="modal-header" style="background-color: #198754;">
+                    <h1 class="modal-title fs-5" id="searchNegotiationModalLabel" style="color: white;">Search Contract Negotiation</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -183,7 +185,7 @@
                         <input type="text" class="form-control me-2" id="negotiation-id"
                             placeholder="Enter Negotiation Id" required style="flex-basis: 100%;"> <br>
                     </div>
-                    <button class="btn btn-outline-success" style="height:40px; padding:10px;"
+                    <button class="btn btn-success" style="padding:10px;"
                         onclick="searchNegotiationById()">Search</button>
 
                     <div class="container table-responsive" id="negotiationIdTable">

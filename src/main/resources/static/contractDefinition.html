@@ -103,6 +103,10 @@
         .btn-outline-success:hover {
             color: #FF7F50;
         }
+
+        .form-label {
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -149,20 +153,43 @@
         aria-labelledby="addContractModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="addContractModalLabel">Add asset</h1>
+                <div class="modal-header" style="background-color: #38aff9;">
+                    <h1 class="modal-title fs-5" id="addContractModalLabel">Add
+                        Contract Definition</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="addContractForm">
-                        <label style="margin-bottom: 13px;" for="custom-json"> Contract Definiton Data (Json
-                            format)</label>
-                        <textarea class="form-control" id="custom-json" rows="15"></textarea>
+
+                        <div class="mb-3">
+                            <label for="contractId" class="form-label">Contract Defintion Id</label>
+                            <input type="text" class="form-control" id="contractId"
+                                placeholder="enter contract definition id" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="accessPolicyId" class="form-label">Access Policy Id</label>
+                            <input type="text" class="form-control" id="accessPolicyId"
+                                placeholder="enter access Policy id" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="contractpolicyId" class="form-label">Contract Policy Id</label>
+                            <input type="text" class="form-control" id="contractpolicyId"
+                                placeholder="enter contract policy id" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="assetId-contract" class="form-label">Asset Id</label>
+                            <input type="text" class="form-control" id="assetId-contract"
+                                placeholder="enter access asset id" required>
+                        </div>
+
                     </form>
                 </div>
                 <div class="container d-flex align-items-center">
                     <button type="button" class="btn btn-secondary me-3" id="resetBtn"
-                        onclick="resetText()">Reset</button>
+                        onclick="resetText('addContractForm')">Reset</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="saveContractBtn"
                         onclick="saveContract()">Save</button>
                 </div>
@@ -176,8 +203,9 @@
         aria-labelledby="searchContractModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="searchContractModalLabel">Search Contract</h1>
+                <div class="modal-header" style="background-color: #198754;">
+                    <h1 class="modal-title fs-5" id="searchContractModalLabel" style="color: white;">Search Contract
+                    </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -185,8 +213,7 @@
                         <input type="text" class="form-control me-2" id="contract-id" placeholder="Enter Contract Id"
                             required style="flex-basis: 100%;"> <br>
                     </div>
-                    <button class="btn btn-outline-success" style="height:40px; padding:10px;"
-                        onclick="searchContractById()">Search</button>
+                    <button class="btn btn-success" style="padding:10px;" onclick="searchContractById()">Search</button>
 
                     <div class="container table-responsive" id="contractIdTable">
                         <table class="table" style="width:100%">
@@ -210,8 +237,8 @@
         aria-labelledby="deleteContractModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="deleteContractModalLabel">Delete contract</h1>
+                <div class="modal-header" style="background-color: #dc3545;">
+                    <h1 class="modal-title fs-5" id="deleteContractModalLabel" style="color: white">Delete contract</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

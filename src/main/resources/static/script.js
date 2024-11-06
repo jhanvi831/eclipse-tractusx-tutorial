@@ -373,6 +373,7 @@ async function deleteAssetById() {
     console.error("Error:", error);
     showToast("Error occurred", true);
   }
+  document.getElementById("delete-asset-id").value = '';
 }
 
 async function savePolicy() {
@@ -629,6 +630,7 @@ async function deletePolicyById() {
     } else {
       showToast("Error occurred", true);
     }
+    document.getElementById("delete-policy-id").value='';
   } catch (error) {
     console.error("Error:", error);
     showToast("Error occurred", true);
@@ -636,23 +638,38 @@ async function deletePolicyById() {
 }
 
 async function saveContract() {
-  const contractData = document.getElementById("custom-json").value;
+  const contractId = document.getElementById("contractId").value;
+  const accessPolicyId = document.getElementById("accessPolicyId").value;
+  const contractPolicyId = document.getElementById("contractpolicyId").value;
+  const assetId = document.getElementById("assetId-contract").value;
+
+  payload = {
+    "@context": {},
+    "@id": contractId,
+    "@type": "ContractDefinition",
+    "accessPolicyId": accessPolicyId,
+    "contractPolicyId": contractPolicyId,
+    "assetsSelector" : {
+        "@type" : "CriterionDto",
+        "operandLeft": "https://w3id.org/edc/v0.0.1/ns/id",
+        "operator": "=",
+        "operandRight": assetId
+    }
+}
 
   try {
-    // validate json is correct
-    const jsonData = JSON.parse(contractData);
-
     const response = await fetch(
       "http://localhost:8080/api/v1/contract-definitions",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(jsonData),
+        body: JSON.stringify(payload),
       }
     );
 
     if (response.ok) {
       showToast("Contract added successfully", false);
+      resetText('addContractForm')
     } else if (response.status === 409) {
       showToast("Contract Definition with give id already exists", true);
     } else {
@@ -804,11 +821,13 @@ async function deleteContractById() {
 
     if (response.ok) {
       showToast("Contract Definition Deleted Successfully", false);
+      
     } else if (response.status === 404) {
       showToast("entered contract definition id does not exist", true);
     } else {
       showToast("Error occurred", true);
     }
+    document.getElementById("delete-contract-id").value='';
   } catch (error) {
     console.error("Error:", error);
     showToast("Error occurred", true);
