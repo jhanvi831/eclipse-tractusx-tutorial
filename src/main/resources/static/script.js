@@ -232,6 +232,7 @@ async function saveAsset() {
 
     if (response.ok) {
       showToast("Asset added successfully", false);
+      resetText('addAssetForm');
     } else if (response.status === 409) {
       showToast("Asset Id already exists", true);
     } else {
@@ -375,20 +376,89 @@ async function deleteAssetById() {
 }
 
 async function savePolicy() {
-  const policyData = document.getElementById("custom-json").value;
+  const activeTab = document.querySelector('.nav-link.active').getAttribute('id');
+  let payload;
+
+  if(activeTab === 'access-tab'){
+    const accessPolicyId = document.getElementById("accesspolicyId").value;
+
+    payload = {
+      "@context": {
+          "odrl": "http://www.w3.org/ns/odrl/2/"
+      },
+      "@type": "PolicyDefinitionRequestDto",
+      "@id": accessPolicyId,
+      "policy": {
+      "@type": "odrl:Set",
+      "odrl:permission" : [{
+        "odrl:action" : "USE",
+        "odrl:constraint" : {
+          "@type": "LogicalConstraint",
+          "odrl:or" : [{
+            "@type" : "Constraint",
+            "odrl:leftOperand" : "BpnCredential",
+            "odrl:operator" : {
+                          "@id": "odrl:eq"
+                      },
+            "odrl:rightOperand" : "active"
+          }]
+        }
+      }]
+      }
+  }
+  }
+  else if(activeTab === 'contract-tab'){
+    const contractPolicyId = document.getElementById("contractpolicyId").value;
+    const businessPartner = document.getElementById("businessPartner").value;
+
+    payload = {
+      "@context": {
+        "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
+        "edc": "https://w3id.org/edc/v0.0.1/ns/",
+        "tx": "https://w3id.org/tractusx/v0.0.1/ns/",
+        "odrl": "http://www.w3.org/ns/odrl/2/"
+      },
+      "@type": "PolicyDefinitionRequestDto",
+      "@id": contractPolicyId,
+      "policy": {
+        "@type": "odrl:Set",
+        "odrl:permission": [
+          {
+            "odrl:action": "use",
+            "odrl:constraint": {
+              "@type": "LogicalConstraint",
+              "odrl:or": [
+                {
+                  "@type": "Constraint",
+                  "odrl:leftOperand": "https://w3id.org/tractusx/v0.0.1/ns/BusinessPartnerGroup",
+                  "odrl:operator": {
+                    "@id": "odrl:eq"
+                  },
+                  "odrl:rightOperand": businessPartner
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+
+  }
 
   try {
-    // validate json is correct
-    const jsonData = JSON.parse(policyData);
-
     const response = await fetch("http://localhost:8080/api/v1/policy", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(jsonData),
+      body: JSON.stringify(payload),
     });
-
     if (response.ok) {
       showToast("Policy added successfully", false);
+      if(activeTab === 'access-tab'){
+        resetText('accessPolicyForm');
+      }
+      else if(activeTab === 'contract-tab'){
+        resetText('contractPolicyForm');
+      }
     } else if (response.status === 409) {
       showToast("Policy Id already exists", true);
     } else {
@@ -398,6 +468,18 @@ async function savePolicy() {
     console.log("Error:", error);
     showToast("Error occurred", true);
   }
+}
+
+
+function resetPolicy(){
+  const activeTab = document.querySelector('.nav-link.active').getAttribute('id');
+  if(activeTab === 'access-tab'){
+    resetText('accessPolicyForm');
+  }
+  else if(activeTab === 'contract-tab'){
+    resetText('contractPolicyForm');
+  }
+
 }
 
 async function fetchPolicies() {

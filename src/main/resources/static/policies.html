@@ -148,19 +148,71 @@
         aria-labelledby="addPolicyModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="addPolicyModalLabel">Add asset</h1>
+                <div class="modal-header" style="background-color: #38aff9;">
+                    <h1 class="modal-title fs-5" id="addPolicyModalLabel">ADD POLICY</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="addPolicyForm">
+                    <!-- <form id="addPolicyForm">
                         <label style="margin-bottom: 13px;" for="custom-json"> Policy Data (Json format)</label>
                         <textarea class="form-control" id="custom-json" rows="15"></textarea>
-                    </form>
+                    </form> -->
+
+                    <ul class="nav nav-tabs" id="policyTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="access-tab" data-bs-toggle="tab"
+                                data-bs-target="#access-tab-pane" type="button" role="tab"
+                                aria-controls="access-tab-pane" aria-selected="true">Add Access Policy</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="contract-tab" data-bs-toggle="tab"
+                                data-bs-target="#contract-tab-pane" type="button" role="tab"
+                                aria-controls="contract-tab-pane" aria-selected="false">Add Contract Policy</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="myTabContent">
+
+                        <div class="tab-pane fade show active" id="access-tab-pane" role="tabpanel"
+                            aria-labelledby="access-tab" tabindex="0">
+
+                            <form id="accessPolicyForm" style="margin: 15px;">
+                                <div class="mb-3">
+                                    <label for="accesspolicyId" class="form-label" style="font-weight: bold;">Access
+                                        Policy Id</label>
+                                    <input type="text" class="form-control" id="accesspolicyId"
+                                        placeholder="enter access policy id" required>
+                                </div>
+                            </form>
+                        </div>
+
+
+                        <div class="tab-pane fade" id="contract-tab-pane" role="tabpanel" aria-labelledby="contract-tab"
+                            tabindex="0">
+                            <form id="contractPolicyForm"
+                                style="margin-top: 15px; margin-left:15px; margin-right: 15px;">
+                                <div class="mb-3">
+                                    <label for="contractpolicyId" class="form-label" style="font-weight: bold;">Contract
+                                        Policy Id</label>
+                                    <input type="text" class="form-control" id="contractpolicyId"
+                                        placeholder="enter contract policy id" required>
+
+                                    <label for="businessPartner" class="form-label"
+                                        style="font-weight: bold; margin-top: 15px;">Business Partner Group</label>
+                                    <input type="text" class="form-control" id="businessPartner"
+                                        placeholder="enter business partner group" required>
+                                </div>
+                            </form>
+                        </div>
+
+
+                    </div>
+
+
                 </div>
                 <div class="container d-flex align-items-center">
                     <button type="button" class="btn btn-secondary me-3" id="resetBtn"
-                        onclick="resetText()">Reset</button>
+                        onclick="resetPolicy()">Reset</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="savePolicyBtn"
                         onclick="savePolicy()">Save</button>
                 </div>
@@ -174,8 +226,8 @@
         aria-labelledby="searchPolicyModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="searchPolicyModalLabel">Search policy</h1>
+                <div class="modal-header" style="background-color: #198754;">
+                    <h1 class="modal-title fs-5" id="searchPolicyModalLabel" style="color: white;">Search policy</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -183,7 +235,7 @@
                         <input type="text" class="form-control me-2" id="policy-id" placeholder="Enter Policy Id"
                             required style="flex-basis: 100%;"> <br>
                     </div>
-                    <button class="btn btn-outline-success" style="height:40px; padding:10px;"
+                    <button class="btn btn-success" style="padding:7px;"
                         onclick="searchPolicyById()">Search Policy</button>
 
                     <div class="container table-responsive" id="policyIdTable">
@@ -208,8 +260,8 @@
         aria-labelledby="deletePolicyModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="deletePolicyModalLabel">Delete Policy</h1>
+                <div class="modal-header" style="background-color: #dc3545;">
+                    <h1 class="modal-title fs-5" id="deletePolicyModalLabel" style="color: white">Delete Policy</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
