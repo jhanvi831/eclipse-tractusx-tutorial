@@ -212,16 +212,16 @@ async function saveAsset() {
 
   payload = {
     "@context": {},
-    "@id": assetId,
+    "@id": assetId, 
     "properties": {
-      "description": assetDescription || "Product EDC Demo Asset"
+        "description": assetDescription || "Product EDC Demo Asset"
     },
     "dataAddress": {
-      "@type": "DataAddress",
-      "type": "HttpData",
-      "baseUrl": baseUrl
+        "@type": "DataAddress",
+        "type": "HttpData",
+        "baseUrl": baseUrl
     }
-  }
+}
 
   try {
     const response = await fetch("http://localhost:8080/api/v1/asset", {
@@ -424,38 +424,32 @@ async function savePolicy() {
 
     payload = {
       "@context": {
-        "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
-        "edc": "https://w3id.org/edc/v0.0.1/ns/",
-        "tx": "https://w3id.org/tractusx/v0.0.1/ns/",
-        "odrl": "http://www.w3.org/ns/odrl/2/"
+          "odrl": "http://www.w3.org/ns/odrl/2/"
       },
       "@type": "PolicyDefinitionRequestDto",
       "@id": contractPolicyId,
       "policy": {
-        "@type": "odrl:Set",
-        "odrl:permission": [
-          {
-            "odrl:action": "use",
-            "odrl:constraint": {
-              "@type": "LogicalConstraint",
-              "odrl:or": [
-                {
-                  "@type": "Constraint",
-                  "odrl:leftOperand": "https://w3id.org/tractusx/v0.0.1/ns/BusinessPartnerGroup",
-                  "odrl:operator": {
-                    "@id": "odrl:eq"
-                  },
-                  "odrl:rightOperand": businessPartner
-                }
-              ]
-            }
-          }
-        ]
+      "@type": "odrl:Set",
+      "odrl:permission" : [{
+        "odrl:action" : "USE",
+        "odrl:constraint" : {
+          "@type": "LogicalConstraint",
+          "odrl:or" : [{
+            "@type" : "Constraint",
+            "odrl:leftOperand" : "https://w3id.org/tractusx/v0.0.1/ns/BusinessPartnerGroup",
+            "odrl:operator" : {
+                          "@id": "odrl:eq"
+                      },
+            "odrl:rightOperand" : businessPartner
+          }]
+        }
+      }]
       }
-    }
+  }
   }
 
   try {
+    console.log("Payload before sending to API:", payload);
     const response = await fetch("http://localhost:8080/api/v1/policy", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -656,23 +650,18 @@ async function saveContract() {
   console.log("Contract Policy Id", contractPolicyId)
 
   payload = {
-    "@context": {
-      "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
-      "edc": "https://w3id.org/edc/v0.0.1/ns/",
-      "tx": "https://w3id.org/tractusx/v0.0.1/ns/",
-      "odrl": "http://www.w3.org/ns/odrl/2/"
-    },
+    "@context": {},
     "@id": contractId,
     "@type": "ContractDefinition",
     "accessPolicyId": accessPolicyId,
     "contractPolicyId": contractPolicyId,
-    "assetsSelector": {
-      "@type": "CriterionDto",
-      "operandLeft": "https://w3id.org/edc/v0.0.1/ns/id",
-      "operator": "=",
-      "operandRight": assetId
+    "assetsSelector" : {
+        "@type" : "CriterionDto",
+        "operandLeft": "https://w3id.org/edc/v0.0.1/ns/id",
+        "operator": "=",
+        "operandRight": assetId
     }
-  }
+}
 
   try {
     const response = await fetch(
