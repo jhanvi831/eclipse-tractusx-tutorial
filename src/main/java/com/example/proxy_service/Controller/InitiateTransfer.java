@@ -27,4 +27,14 @@ public class InitiateTransfer {
     public Mono<ResponseEntity<String>> getTransfersById(@PathVariable String id) {
         return initiateTransferService.getTransfersById(id);
     }
+
+    @PostMapping("alice/allTransfers")
+    public Mono<ResponseEntity<String>> alicegetAllTransfers() {
+        return initiateTransferService.alicegetAllTransfers();
+    }
+
+    @GetMapping("alice/{id}")
+    public Mono<ResponseEntity<String>> alicegetTransfersById(@PathVariable String id) {
+        return initiateTransferService.alicegetTransfersById(id);
+    }
 }

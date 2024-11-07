@@ -27,4 +27,16 @@ public class ContractNegotiation {
     public Mono<ResponseEntity<String>> getNegotiationById(@PathVariable String id) {
         return contractNegotiationService.getNegotiationById(id);
     }
+
+    // ALICE
+
+    @PostMapping("/alice/allNegotiations")
+    public Mono<ResponseEntity<String>> alicegetAllNegotiations() {
+        return contractNegotiationService.alicegetAllNegotiations();
+    }
+
+    @GetMapping("alice/{id}")
+    public Mono<ResponseEntity<String>> alicegetNegotiationById(@PathVariable String id) {
+        return contractNegotiationService.alicegetNegotiationById(id);
+    }
 }

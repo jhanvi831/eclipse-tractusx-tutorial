@@ -29,4 +29,24 @@ public class BusinessPartnerGroup {
         return businessPartnerGroupService.updateBusinessPartnerGroup(updateBpg);
     }
 
+
+
+    // BOB
+
+    @PostMapping("/bob/business-partner-groups")
+    public Mono<ResponseEntity<String>> bobcreateBusinessPartnerGroup(@RequestBody String bpg) {
+        return businessPartnerGroupService.bobcreateBusinessPartner(bpg);
+
+    }
+
+    @GetMapping("/bob/business-partner-groups/{policyBpn}")
+    public Mono<ResponseEntity<String>> bobgetBusinessPartnerGroups(@PathVariable String policyBpn) {
+        return businessPartnerGroupService.bobgetBusinessPartnerGroups(policyBpn);
+    }
+
+    @PutMapping("/bob/business-partner-groups")
+    public Mono<ResponseEntity<String>> bobupdateBusinessPartnerGroups(@RequestBody String updateBpg) {
+        return businessPartnerGroupService.bobupdateBusinessPartnerGroup(updateBpg);
+    }
+
 }

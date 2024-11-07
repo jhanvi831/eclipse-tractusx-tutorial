@@ -4,7 +4,7 @@ function showContent(section) {
 
     switch (section) {
         case 'businessPartnerGroup':
-            content = 'businessPartnerGroup.html'
+            content = 'bobbusinessPartnerGroup.html'
             break;
 
         case 'assets':
@@ -72,6 +72,120 @@ function resetText(formToReset) {
     document.getElementById(formToReset).reset();
 }
 
+
+async function addBusinessPartnerGroup() {
+    const policyBpn = document.getElementById("Policy-BPN").value;
+    const businessPartnerGroup = document.getElementById(
+      "Business-Partner-Group"
+    ).value;
+    const toast = document.getElementById("toast");
+  
+    if (!policyBpn || !businessPartnerGroup) {
+      showToast("Please fill the required fields", true);
+      return;
+    }
+  
+    const payload = {
+      "@context": { tx: "https://w3id.org/tractusx/v0.0.1/ns/" },
+      "@id": policyBpn,
+      "tx:groups": [businessPartnerGroup],
+    };
+  
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/v1/bob/business-partner-groups",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+  
+      if (response.ok) {
+        showToast("Successfully added", false);
+        document.getElementById("dataTableBody").innerHTML = "";
+        addToTable(policyBpn, businessPartnerGroup);
+      } else if (response.status === 409) {
+        showToast("BPN already exists, try updating", true);
+      } else {
+        showToast("Failed to add", true);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      showToast("An error occurred", true);
+    }
+  }
+  
+  async function updateBusinessPartnerGroup() {
+    const updateBpn = document.getElementById("Update-Policy-BPN").value;
+    const updateGroup = document.getElementById(
+      "Update-Business-Partner-Group"
+    ).value;
+  
+    if (!updateBpn || !updateGroup) {
+      showToast("Enter the values", true);
+      return;
+    }
+  
+    const payload = {
+      "@context": { tx: "https://w3id.org/tractusx/v0.0.1/ns/" },
+      "@id": updateBpn,
+      "tx:groups": [updateGroup],
+    };
+  
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/v1/bob/business-partner-groups",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+      if (response.ok) {
+        showToast("Successfully updated Business Partner Group", false);
+        document.getElementById("dataTableBody").innerHTML = "";
+        addToTable(updateBpn, updateGroup);
+      } else if (response.status === 404) {
+        showToast("Invalid BPN Number", true);
+      } else {
+        showToast("Error occurred while updating", true);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      showToast("Error occurred while updating", true);
+    }
+  }
+  
+  async function searchBusinessPartnerGroup() {
+    const bpn = document.getElementById("search-bpn").value;
+  
+    if (!bpn) {
+      showToast("Please enter BPN", true);
+      return;
+    }
+  
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/v1/bob/business-partner-groups/${bpn}`
+      );
+  
+      if (response.ok) {
+        const data = await response.json();
+        document.getElementById("dataTableBody").innerHTML = "";
+        addToTable(data["@id"], data["tx:groups"]);
+        showToast("Search completed", false);
+      } else if (response.status === 404) {
+        showToast("BPN does not exist", true);
+      } else {
+        showToast("Error occurred", true);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      showToast("Error occurred", true);
+    }
+  }
+
 async function queryCatalog() {
     payload = {
         "@context": {
@@ -123,7 +237,9 @@ function displayCatalog(catalogs) {
         const datasets = Array.isArray(catalogs["dcat:dataset"]) ? catalogs["dcat:dataset"] : [catalogs["dcat:dataset"]];
 
         datasets.forEach(dataset => {
-            dataset["odrl:hasPolicy"].forEach(catalog => {
+            const policy =  Array.isArray(dataset["odrl:hasPolicy"]) ? dataset["odrl:hasPolicy"] : [dataset["odrl:hasPolicy"]];
+
+            policy.forEach(catalog => {
 
                 const row = document.createElement('tr');
 

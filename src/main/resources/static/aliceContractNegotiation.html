@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width initial-scale=1.0">
+    <title>Contract Negotiation</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin-right: 30px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px
+        }
+
+        input,
+        button {
+            max-width: 600px;
+            padding: 10px;
+            width: 100%;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+
+        }
+
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            top: 20px;
+            right: 20px;
+            border-radius: 4px;
+            transition: opacity 0.3s ease-out;
+        }
+
+        .toast.show {
+            visibility: visible;
+        }
+
+        .toast.error {
+            background-color: #f44336;
+        }
+
+        #negotiationTable {
+            visibility: hidden;
+            margin: 20px;
+        }
+
+        #negotiationIdTable {
+            visibility: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-group .btn {
+                margin: 5px 0;
+                width: 100%;
+            }
+        }
+
+        .btn.btn-outline-success {
+            background-color: #06253b;
+            width: 220px;
+            height: 90px;
+            padding: 15px;
+        }
+
+        .btn-outline-success {
+            color: white;
+        }
+
+        .btn-outline-success:hover {
+            color: #FF7F50;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row d-flex align-items-center">
+            <div class="col">
+                <button class="btn btn-outline-success flex-fill" data-bs-target="#showNegotiationsModal"
+                    onclick="fetchNegotiations()">Show All Negotiations</button>
+            </div>
+            <div class="col">
+                <button class="btn btn-outline-success flex-fill" id="searchNegotiationBtn" data-bs-toggle="modal"
+                    data-bs-target="#searchNegotiationModal">Search Negotiation by ID</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive" id="negotiationTable">
+        <table class="table" style="width:140%">
+            <thead>
+                <tr>
+                    <th>Negotiation Id</th>
+                    <th>Type</th>
+                    <th>State</th>
+                    <th>Counter Party Id</th>
+                    <th>Agreement Id</th>
+                    <th>Counter Party Address</th>
+                </tr>
+            </thead>
+            <tbody id="negotiationDataTableBody"></tbody>
+        </table>
+    </div>
+
+    <!-- Search Negotiation by Id modal -->
+    <div class="modal fade" id="searchNegotiationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="searchNegotiationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #198754;">
+                    <h1 class="modal-title fs-5" id="searchNegotiationModalLabel" style="color: white;">Search Contract Negotiation</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="cotainer d-flex" style="margin-bottom: 20px;">
+                        <input type="text" class="form-control me-2" id="negotiation-id"
+                            placeholder="Enter Negotiation Id" required style="flex-basis: 100%;"> <br>
+                    </div>
+                    <button class="btn btn-success" style="padding:10px;"
+                        onclick="searchNegotiationById()">Search</button>
+
+                    <div class="container table-responsive" id="negotiationIdTable">
+                        <table class="table" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Negotiation Id</th>
+                                    <th>Type</th>
+                                    <th>State</th>
+                                    <th>Counter Party Id</th>
+                                    <th>Agreement Id</th>
+                                    <th>Counter Party Address</th>
+                                </tr>
+                            </thead>
+                            <tbody id="negotiationDataTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"> </div>
+
+</body>
+
+</html>
