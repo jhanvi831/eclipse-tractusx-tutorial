@@ -33,4 +33,26 @@ public class Asset {
         return assetService.deleteAssetById(id);
     }
 
+    // BOB
+
+    @PostMapping("/bob")
+    public Mono<ResponseEntity<String>> bobcreateBusinessPartnerGroup(@RequestBody String asset) {
+        return assetService.bobcreateAsset(asset);
+    }
+
+    @PostMapping("/bob/allAssets")
+    public Mono<ResponseEntity<String>> bobgetAllAssets() {
+        return assetService.bobgetAllAssets();
+    }
+
+    @GetMapping("/bob/{id}")
+    public Mono<ResponseEntity<String>> bobgetAssetById(@PathVariable String id) {
+        return assetService.bobgetAssetById(id);
+    }
+
+    @DeleteMapping("/bob/{id}")
+    public Mono<ResponseEntity<String>> bobdeleteAssetById(@PathVariable String id) {
+        return assetService.bobdeleteAssetById(id);
+    }
+
 }

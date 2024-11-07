@@ -94,6 +94,7 @@
             width: 220px;
             height: 90px;
             padding: 15px;
+            margin: 20px;
         }
 
         .btn-outline-success {
@@ -110,6 +111,10 @@
 
     <div class="container">
         <div class="row d-flex align-items-center">
+            <div class="col">
+                <button class="btn btn-outline-success flex-fill" data-bs-toggle="modal"
+                    data-bs-target="#initiateNegotiationModal">Initiate Contract Negotiation</button>
+            </div>
             <div class="col">
                 <button class="btn btn-outline-success flex-fill" data-bs-target="#showNegotiationsModal"
                     onclick="fetchNegotiations()">Show All Negotiations</button>
@@ -137,13 +142,56 @@
         </table>
     </div>
 
+    <!-- Add contract modal -->
+    <div class="modal fade" id="initiateNegotiationModal" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="negotiationLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #38aff9;">
+                    <h1 class="modal-title fs-5" id="negotiationLabel">Initiate Negotiation</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addnegotiationForm">
+
+                        <div class="mb-3">
+                            <label for="offerId-nego" class="form-label">Offer Id</label>
+                            <input type="text" class="form-control" id="offerId-nego" placeholder="enter offer id"
+                                required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="assetId-negotiation" class="form-label">Asset Id</label>
+                            <input type="text" class="form-control" id="assetId-negotiation"
+                                placeholder="enter asset id" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="business-partner-nego" class="form-label">Business Partner groups</label>
+                            <input type="text" class="form-control" id="business-partner-nego"
+                                placeholder="enter business partner groups" required>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="container d-flex align-items-center">
+                    <button type="button" class="btn btn-secondary me-3" id="resetBtn"
+                        onclick="resetText('addnegotiationForm')">Reset</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="saveNegotiationBtn"
+                        onclick="initateNegotiation()">Start Negotiation</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Search Negotiation by Id modal -->
     <div class="modal fade" id="searchNegotiationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="searchNegotiationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #198754;">
-                    <h1 class="modal-title fs-5" id="searchNegotiationModalLabel" style="color: white;">Search Contract Negotiation</h1>
+                    <h1 class="modal-title fs-5" id="searchNegotiationModalLabel" style="color: white;">Search Contract
+                        Negotiation</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

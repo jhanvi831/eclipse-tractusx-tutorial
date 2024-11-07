@@ -18,4 +18,9 @@ public class Catalog {
         return catalogService.getCatalog(catalogRequest);
     }
 
+    @PostMapping("/alice")
+    public Mono<ResponseEntity<String>> alicegetCatalog(@RequestBody String catalogRequest) {
+        return catalogService.alicegetCatalog(catalogRequest);
+    }
+
 }

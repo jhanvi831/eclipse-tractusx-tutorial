@@ -30,6 +30,11 @@ public class ContractNegotiation {
 
     // ALICE
 
+    @PostMapping("/alice")
+    public Mono<ResponseEntity<String>> aliceinitiateContractNegotiation(@RequestBody String contractNegotiation) {
+        return contractNegotiationService.alicecreateContractNegotiation(contractNegotiation);
+    }
+
     @PostMapping("/alice/allNegotiations")
     public Mono<ResponseEntity<String>> alicegetAllNegotiations() {
         return contractNegotiationService.alicegetAllNegotiations();

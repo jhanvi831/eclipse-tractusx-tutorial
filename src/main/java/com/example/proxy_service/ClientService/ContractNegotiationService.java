@@ -69,9 +69,21 @@ public class ContractNegotiationService {
 
     }
 
+    // ALICE
 
-
-    //ALICE
+    public Mono<ResponseEntity<String>> alicecreateContractNegotiation(String contractNegotiation) {
+        return webClient
+                .post()
+                .uri(PROVIDER_MANAGEMENT_URL + NEGOTIATION)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(contractNegotiation)
+                .retrieve()
+                .toEntity(String.class)
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println(error.getMessage()));
+    }
 
     public Mono<ResponseEntity<String>> alicegetAllNegotiations() {
         return webClient

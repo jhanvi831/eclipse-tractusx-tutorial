@@ -33,4 +33,26 @@ public class ContractDefinition {
         return contractDefinitionService.deleteContractsById(id);
     }
 
+    // BOB
+
+    @PostMapping("/bob")
+    public Mono<ResponseEntity<String>> bobcreateContractDefinition(@RequestBody String contractDefinition) {
+        return contractDefinitionService.bobcreateContract(contractDefinition);
+    }
+
+    @PostMapping("/bob/allContracts")
+    public Mono<ResponseEntity<String>> bobgetAllContracts() {
+        return contractDefinitionService.bobgetAllContracts();
+    }
+
+    @GetMapping("/bob/{id}")
+    public Mono<ResponseEntity<String>> bobgetContractsById(@PathVariable String id) {
+        return contractDefinitionService.bobgetContractsById(id);
+    }
+
+    @DeleteMapping("/bob/{id}")
+    public Mono<ResponseEntity<String>> bobdeleteContractsById(@PathVariable String id) {
+        return contractDefinitionService.bobdeleteContractsById(id);
+    }
+
 }

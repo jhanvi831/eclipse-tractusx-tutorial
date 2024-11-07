@@ -29,8 +29,6 @@ public class BusinessPartnerGroup {
         return businessPartnerGroupService.updateBusinessPartnerGroup(updateBpg);
     }
 
-
-
     // BOB
 
     @PostMapping("/bob/business-partner-groups")

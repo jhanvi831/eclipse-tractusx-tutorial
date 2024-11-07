@@ -28,6 +28,13 @@ public class InitiateTransfer {
         return initiateTransferService.getTransfersById(id);
     }
 
+    // ALICE
+
+    @PostMapping("/alice")
+    public Mono<ResponseEntity<String>> aliceinitiateContractNegotiation(@RequestBody String contractNegotiation) {
+        return initiateTransferService.aliceinitiateTransfer(contractNegotiation);
+    }
+
     @PostMapping("alice/allTransfers")
     public Mono<ResponseEntity<String>> alicegetAllTransfers() {
         return initiateTransferService.alicegetAllTransfers();

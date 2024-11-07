@@ -20,7 +20,7 @@ function showContent(section) {
       break;
 
     case "catalog":
-      content = "catalog.html";
+      content = "alicecatalog.html";
       break;
 
     case "contractNegotiation":
@@ -212,16 +212,16 @@ async function saveAsset() {
 
   payload = {
     "@context": {},
-    "@id": assetId, 
-    "properties": {
-        "description": assetDescription || "Product EDC Demo Asset"
+    "@id": assetId,
+    properties: {
+      description: assetDescription || "Product EDC Demo Asset",
     },
-    "dataAddress": {
-        "@type": "DataAddress",
-        "type": "HttpData",
-        "baseUrl": baseUrl
-    }
-}
+    dataAddress: {
+      "@type": "DataAddress",
+      type: "HttpData",
+      baseUrl: baseUrl,
+    },
+  };
 
   try {
     const response = await fetch("http://localhost:8080/api/v1/asset", {
@@ -232,7 +232,7 @@ async function saveAsset() {
 
     if (response.ok) {
       showToast("Asset added successfully", false);
-      resetText('addAssetForm');
+      resetText("addAssetForm");
     } else if (response.status === 409) {
       showToast("Asset Id already exists", true);
     } else {
@@ -373,27 +373,29 @@ async function deleteAssetById() {
     console.error("Error:", error);
     showToast("Error occurred", true);
   }
-  document.getElementById("delete-asset-id").value = '';
+  document.getElementById("delete-asset-id").value = "";
 }
 
 async function savePolicy() {
-  const activeTab = document.querySelector('.nav-link.active').getAttribute('id');
+  const activeTab = document
+    .querySelector(".nav-link.active")
+    .getAttribute("id");
   let payload;
 
-  if (activeTab === 'access-tab') {
+  if (activeTab === "access-tab") {
     const accessPolicyId = document.getElementById("accesspolicyId").value;
     console.log("Creating Access Policy with Id: ", accessPolicyId);
 
     payload = {
       "@context": {
         "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
-        "edc": "https://w3id.org/edc/v0.0.1/ns/",
-        "tx": "https://w3id.org/tractusx/v0.0.1/ns/",
-        "odrl": "http://www.w3.org/ns/odrl/2/"
+        edc: "https://w3id.org/edc/v0.0.1/ns/",
+        tx: "https://w3id.org/tractusx/v0.0.1/ns/",
+        odrl: "http://www.w3.org/ns/odrl/2/",
       },
       "@type": "PolicyDefinitionRequestDto",
       "@id": accessPolicyId,
-      "policy": {
+      policy: {
         "@type": "odrl:Set",
         "odrl:permission": [
           {
@@ -405,47 +407,51 @@ async function savePolicy() {
                   "@type": "Constraint",
                   "odrl:leftOperand": "BpnCredential",
                   "odrl:operator": {
-                    "@id": "odrl:eq"
+                    "@id": "odrl:eq",
                   },
-                  "odrl:rightOperand": "active"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    }
-  }
-  else if (activeTab === 'contract-tab') {
+                  "odrl:rightOperand": "active",
+                },
+              ],
+            },
+          },
+        ],
+      },
+    };
+  } else if (activeTab === "contract-tab") {
     const contractPolicyId = document.getElementById("contractpolicyId").value;
     const businessPartner = document.getElementById("businessPartner").value;
 
-    console.log("Creating Contract Policy with Id: ", contractPolicyId)
+    console.log("Creating Contract Policy with Id: ", contractPolicyId);
 
     payload = {
       "@context": {
-          "odrl": "http://www.w3.org/ns/odrl/2/"
+        odrl: "http://www.w3.org/ns/odrl/2/",
       },
       "@type": "PolicyDefinitionRequestDto",
       "@id": contractPolicyId,
-      "policy": {
-      "@type": "odrl:Set",
-      "odrl:permission" : [{
-        "odrl:action" : "USE",
-        "odrl:constraint" : {
-          "@type": "LogicalConstraint",
-          "odrl:or" : [{
-            "@type" : "Constraint",
-            "odrl:leftOperand" : "https://w3id.org/tractusx/v0.0.1/ns/BusinessPartnerGroup",
-            "odrl:operator" : {
-                          "@id": "odrl:eq"
-                      },
-            "odrl:rightOperand" : businessPartner
-          }]
-        }
-      }]
-      }
-  }
+      policy: {
+        "@type": "odrl:Set",
+        "odrl:permission": [
+          {
+            "odrl:action": "USE",
+            "odrl:constraint": {
+              "@type": "LogicalConstraint",
+              "odrl:or": [
+                {
+                  "@type": "Constraint",
+                  "odrl:leftOperand":
+                    "https://w3id.org/tractusx/v0.0.1/ns/BusinessPartnerGroup",
+                  "odrl:operator": {
+                    "@id": "odrl:eq",
+                  },
+                  "odrl:rightOperand": businessPartner,
+                },
+              ],
+            },
+          },
+        ],
+      },
+    };
   }
 
   try {
@@ -457,11 +463,10 @@ async function savePolicy() {
     });
     if (response.ok) {
       showToast("Policy added successfully", false);
-      if (activeTab === 'access-tab') {
-        resetText('accessPolicyForm');
-      }
-      else if (activeTab === 'contract-tab') {
-        resetText('contractPolicyForm');
+      if (activeTab === "access-tab") {
+        resetText("accessPolicyForm");
+      } else if (activeTab === "contract-tab") {
+        resetText("contractPolicyForm");
       }
     } else if (response.status === 409) {
       showToast("Policy Id already exists", true);
@@ -474,16 +479,15 @@ async function savePolicy() {
   }
 }
 
-
 function resetPolicy() {
-  const activeTab = document.querySelector('.nav-link.active').getAttribute('id');
-  if (activeTab === 'access-tab') {
-    resetText('accessPolicyForm');
+  const activeTab = document
+    .querySelector(".nav-link.active")
+    .getAttribute("id");
+  if (activeTab === "access-tab") {
+    resetText("accessPolicyForm");
+  } else if (activeTab === "contract-tab") {
+    resetText("contractPolicyForm");
   }
-  else if (activeTab === 'contract-tab') {
-    resetText('contractPolicyForm');
-  }
-
 }
 
 async function fetchPolicies() {
@@ -527,13 +531,13 @@ function displayPolicies(policies) {
       const leftOperandCell = document.createElement("td");
       leftOperandCell.textContent =
         policy.policy["odrl:permission"]["odrl:constraint"]["odrl:or"][
-        "odrl:leftOperand"
+          "odrl:leftOperand"
         ];
 
       const rightOperandCell = document.createElement("td");
       rightOperandCell.textContent =
         policy.policy["odrl:permission"]["odrl:constraint"]["odrl:or"][
-        "odrl:rightOperand"
+          "odrl:rightOperand"
         ];
 
       row.appendChild(idCell);
@@ -564,10 +568,10 @@ async function searchPolicyById() {
       addPolicyToTable(
         data["@id"],
         data.policy["odrl:permission"]["odrl:constraint"]["odrl:or"][
-        "odrl:leftOperand"
+          "odrl:leftOperand"
         ],
         data.policy["odrl:permission"]["odrl:constraint"]["odrl:or"][
-        "odrl:rightOperand"
+          "odrl:rightOperand"
         ]
       );
       showToast("Search completed", false);
@@ -633,7 +637,7 @@ async function deletePolicyById() {
     } else {
       showToast("Error occurred", true);
     }
-    document.getElementById("delete-policy-id").value = '';
+    document.getElementById("delete-policy-id").value = "";
   } catch (error) {
     console.error("Error:", error);
     showToast("Error occurred", true);
@@ -646,22 +650,22 @@ async function saveContract() {
   const contractPolicyId = document.getElementById("contractpolicyId").value;
   const assetId = document.getElementById("assetId-contract").value;
 
-  console.log("Access Policy Id: ",accessPolicyId)
-  console.log("Contract Policy Id", contractPolicyId)
+  console.log("Access Policy Id: ", accessPolicyId);
+  console.log("Contract Policy Id", contractPolicyId);
 
   payload = {
     "@context": {},
     "@id": contractId,
     "@type": "ContractDefinition",
-    "accessPolicyId": accessPolicyId,
-    "contractPolicyId": contractPolicyId,
-    "assetsSelector" : {
-        "@type" : "CriterionDto",
-        "operandLeft": "https://w3id.org/edc/v0.0.1/ns/id",
-        "operator": "=",
-        "operandRight": assetId
-    }
-}
+    accessPolicyId: accessPolicyId,
+    contractPolicyId: contractPolicyId,
+    assetsSelector: {
+      "@type": "CriterionDto",
+      operandLeft: "https://w3id.org/edc/v0.0.1/ns/id",
+      operator: "=",
+      operandRight: assetId,
+    },
+  };
 
   try {
     const response = await fetch(
@@ -675,7 +679,7 @@ async function saveContract() {
 
     if (response.ok) {
       showToast("Contract added successfully", false);
-      resetText('addContractForm')
+      resetText("addContractForm");
     } else if (response.status === 409) {
       showToast("Contract Definition with give id already exists", true);
     } else {
@@ -827,83 +831,224 @@ async function deleteContractById() {
 
     if (response.ok) {
       showToast("Contract Definition Deleted Successfully", false);
-
     } else if (response.status === 404) {
       showToast("entered contract definition id does not exist", true);
     } else {
       showToast("Error occurred", true);
     }
-    document.getElementById("delete-contract-id").value = '';
+    document.getElementById("delete-contract-id").value = "";
   } catch (error) {
     console.error("Error:", error);
     showToast("Error occurred", true);
   }
 }
 
+async function queryCatalog() {
+  payload = {
+    "@context": {
+      edc: "https://w3id.org/edc/v0.0.1/ns/",
+    },
+    "@type": "CatalogRequest",
+    counterPartyAddress: "http://bob-controlplane:8084/api/v1/dsp",
+    protocol: "dataspace-protocol-http",
+    querySpec: {
+      offset: 0,
+      limit: 50,
+    },
+  };
+
+  try {
+    const response = await fetch("http://localhost:8080/api/v1/catalog/alice", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+      const catalogs = await response.json();
+      showToast("Catalog search successful", false);
+      console.log(JSON.stringify(catalogs, null, 2));
+      displayCatalog(catalogs);
+    } else {
+      console.error("Failed to fetch catalogs");
+    }
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
+
+function displayCatalog(catalogs) {
+  const tableBody = document.getElementById("catalogDataTableBody");
+  const tableContainer = document.getElementById("catalogTable");
+
+  if (tableContainer.style.visibility === "visible") {
+    tableContainer.style.visibility = "hidden";
+    tableBody.innerHTML = "";
+  } else {
+    tableContainer.style.visibility = "visible";
+    tableBody.innerHTML = "";
+
+    const datasets = Array.isArray(catalogs["dcat:dataset"])
+      ? catalogs["dcat:dataset"]
+      : [catalogs["dcat:dataset"]];
+
+    datasets.forEach((dataset) => {
+      const policy = Array.isArray(dataset["odrl:hasPolicy"])
+        ? dataset["odrl:hasPolicy"]
+        : [dataset["odrl:hasPolicy"]];
+
+      policy.forEach((catalog) => {
+        const row = document.createElement("tr");
+
+        const assetIdCell = document.createElement("td");
+        assetIdCell.textContent = catalog["odrl:permission"]["odrl:target"];
+
+        const offerIdCell = document.createElement("td");
+        offerIdCell.textContent = catalog["@id"];
+
+        const bpgCell = document.createElement("td");
+        bpgCell.textContent =
+          catalog["odrl:permission"]["odrl:constraint"]["odrl:or"][
+            "odrl:rightOperand"
+          ];
+
+        row.appendChild(assetIdCell);
+        row.appendChild(offerIdCell);
+        row.appendChild(bpgCell);
+
+        tableBody.appendChild(row);
+      });
+    });
+  }
+}
+
+async function initateNegotiation() {
+  const offerId = document.getElementById("offerId-nego").value;
+  const assetId = document.getElementById("assetId-negotiation").value;
+  const businessPartner = document.getElementById(
+    "business-partner-nego"
+  ).value;
+
+  try {
+    payload = {
+      "@context": {
+        odrl: "http://www.w3.org/ns/odrl/2/",
+      },
+      "@type": "NegotiationInitiateRequestDto",
+      connectorAddress: "http://bob-controlplane:8084/api/v1/dsp",
+      protocol: "dataspace-protocol-http",
+      connectorId: "BPNL000000000002",
+      providerId: "BPNL000000000002",
+      offer: {
+        offerId: offerId,
+        assetId: assetId,
+        policy: {
+          "@type": "odrl:Set",
+          "odrl:permission": {
+            "odrl:target": assetId,
+            "odrl:action": {
+              "odrl:type": "USE",
+            },
+            "odrl:constraint": {
+              "odrl:or": {
+                "odrl:leftOperand":
+                  "https://w3id.org/tractusx/v0.0.1/ns/BusinessPartnerGroup",
+                "odrl:operator": {
+                  "@id": "odrl:eq",
+                },
+                "odrl:rightOperand": businessPartner,
+              },
+            },
+          },
+          "odrl:prohibition": [],
+          "odrl:obligation": [],
+          "odrl:target": assetId,
+        },
+      },
+    };
+
+    const response = await fetch(
+      "http://localhost:8080/api/v1/contract-negotiations/alice",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    if (response.ok) {
+      showToast("Negotiation initiated successfully", false);
+    } else {
+      showToast("Error occurred", true);
+    }
+  } catch (error) {
+    console.log("Error:", error);
+    showToast("Error occurred", true);
+  }
+}
 
 async function fetchNegotiations() {
   try {
-      const response = await fetch('http://localhost:8080/api/v1/contract-negotiations/alice/allNegotiations', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-      });
+    const response = await fetch(
+      "http://localhost:8080/api/v1/contract-negotiations/alice/allNegotiations",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
 
-      if (response.ok) {
-          const negotiations = await response.json()
-          displayNegotiation(negotiations)
-      }
-      else {
-          console.error("Failed to fetch Negotiations")
-      }
-  }
-  catch (error) {
-      console.log("Error:", error)
+    if (response.ok) {
+      const negotiations = await response.json();
+      displayNegotiation(negotiations);
+    } else {
+      console.error("Failed to fetch Negotiations");
+    }
+  } catch (error) {
+    console.log("Error:", error);
   }
 }
 
 function displayNegotiation(negotiations) {
-  const tableBody = document.getElementById('negotiationDataTableBody');
-  const tableContainer = document.getElementById('negotiationTable')
+  const tableBody = document.getElementById("negotiationDataTableBody");
+  const tableContainer = document.getElementById("negotiationTable");
 
-  if (tableContainer.style.visibility === 'visible') {
-      tableContainer.style.visibility = 'hidden';
-      tableBody.innerHTML = "";
-  }
-  else {
-      tableContainer.style.visibility = 'visible';
-      tableBody.innerHTML = '';
+  if (tableContainer.style.visibility === "visible") {
+    tableContainer.style.visibility = "hidden";
+    tableBody.innerHTML = "";
+  } else {
+    tableContainer.style.visibility = "visible";
+    tableBody.innerHTML = "";
 
-      negotiations.forEach(negotiation => {
-          const row = document.createElement('tr');
+    negotiations.forEach((negotiation) => {
+      const row = document.createElement("tr");
 
-          const idCell = document.createElement('td');
-          idCell.textContent = negotiation['@id'];
+      const idCell = document.createElement("td");
+      idCell.textContent = negotiation["@id"];
 
-          const typeCell = document.createElement('td');
-          typeCell.textContent = negotiation["type"];
+      const typeCell = document.createElement("td");
+      typeCell.textContent = negotiation["type"];
 
-          const stateCell = document.createElement('td');
-          stateCell.textContent = negotiation["state"]
+      const stateCell = document.createElement("td");
+      stateCell.textContent = negotiation["state"];
 
-          const counterPartyIdCell = document.createElement('td');
-          counterPartyIdCell.textContent = negotiation["counterPartyId"]
+      const counterPartyIdCell = document.createElement("td");
+      counterPartyIdCell.textContent = negotiation["counterPartyId"];
 
-          const contractAgreementIdCell = document.createElement('td');
-          contractAgreementIdCell.textContent = negotiation["contractAgreementId"]
+      const contractAgreementIdCell = document.createElement("td");
+      contractAgreementIdCell.textContent = negotiation["contractAgreementId"];
 
-          const counterPartyAddressCell = document.createElement('td');
-          counterPartyAddressCell.textContent = negotiation["counterPartyAddress"]
+      const counterPartyAddressCell = document.createElement("td");
+      counterPartyAddressCell.textContent = negotiation["counterPartyAddress"];
 
-          row.appendChild(idCell);
-          row.appendChild(typeCell);
-          row.appendChild(stateCell);
-          row.appendChild(counterPartyIdCell);
-          row.appendChild(contractAgreementIdCell);
-          row.appendChild(counterPartyAddressCell);
+      row.appendChild(idCell);
+      row.appendChild(typeCell);
+      row.appendChild(stateCell);
+      row.appendChild(counterPartyIdCell);
+      row.appendChild(contractAgreementIdCell);
+      row.appendChild(counterPartyAddressCell);
 
-          tableBody.appendChild(row);
-
-      });
+      tableBody.appendChild(row);
+    });
   }
 }
 
@@ -911,65 +1056,70 @@ async function searchNegotiationById() {
   const negotiationId = document.getElementById("negotiation-id").value;
 
   if (!negotiationId) {
-      showToast("Please enter Negotiation id", true);
-      return;
+    showToast("Please enter Negotiation id", true);
+    return;
   }
 
   try {
-      const response = await fetch(`http://localhost:8080/api/v1/contract-negotiations/alice/${negotiationId}`);
+    const response = await fetch(
+      `http://localhost:8080/api/v1/contract-negotiations/alice/${negotiationId}`
+    );
 
-      if (response.ok) {
-          const data = await response.json();
-          document.getElementById("negotiationTable").innerHTML = "";
-          addNegotiationToTable(
-              data['@id'],
-              data["type"],
-              data["state"],
-              data["counterPartyId"],
-              data["contractAgreementId"],
-              data["counterPartyAddress"]
-          );
-          showToast("Search completed", false);
-      }
-      else if (response.status === 404) {
-          showToast("Negotiation Id not found", true);
-      }
-      else {
-          showToast("Error occurred", true);
-      }
-
-  }
-  catch (error) {
-      console.error("Error:", error)
+    if (response.ok) {
+      const data = await response.json();
+      document.getElementById("negotiationTable").innerHTML = "";
+      addNegotiationToTable(
+        data["@id"],
+        data["type"],
+        data["state"],
+        data["counterPartyId"],
+        data["contractAgreementId"],
+        data["counterPartyAddress"]
+      );
+      showToast("Search completed", false);
+    } else if (response.status === 404) {
+      showToast("Negotiation Id not found", true);
+    } else {
       showToast("Error occurred", true);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    showToast("Error occurred", true);
   }
 }
 
-async function addNegotiationToTable(negotiationId, type, state, counterPartyId, contractAgreementId, counterPartyAddress) {
-  const tableBody = document.getElementById('negotiationDataTableBody')
-  const tableContainer = document.getElementById('negotiationIdTable')
-  tableContainer.style.visibility = 'visible';
+async function addNegotiationToTable(
+  negotiationId,
+  type,
+  state,
+  counterPartyId,
+  contractAgreementId,
+  counterPartyAddress
+) {
+  const tableBody = document.getElementById("negotiationDataTableBody");
+  const tableContainer = document.getElementById("negotiationIdTable");
+  tableContainer.style.visibility = "visible";
 
   tableBody.innerHTML = "";
 
-  const row = document.createElement('tr');
+  const row = document.createElement("tr");
 
-  const idCell = document.createElement('td');
+  const idCell = document.createElement("td");
   idCell.textContent = negotiationId;
 
-  const typeCell = document.createElement('td');
+  const typeCell = document.createElement("td");
   typeCell.textContent = type;
 
-  const stateCell = document.createElement('td');
+  const stateCell = document.createElement("td");
   stateCell.textContent = state;
 
-  const counterPartyIdCell = document.createElement('td');
+  const counterPartyIdCell = document.createElement("td");
   counterPartyIdCell.textContent = counterPartyId;
 
-  const contractAgreementIdCell = document.createElement('td');
+  const contractAgreementIdCell = document.createElement("td");
   contractAgreementIdCell.textContent = contractAgreementId;
 
-  const counterPartyAddressCell = document.createElement('td');
+  const counterPartyAddressCell = document.createElement("td");
   counterPartyAddressCell.textContent = counterPartyAddress;
 
   row.appendChild(idCell);
@@ -979,68 +1129,111 @@ async function addNegotiationToTable(negotiationId, type, state, counterPartyId,
   row.appendChild(contractAgreementIdCell);
   row.appendChild(counterPartyAddressCell);
 
-  tableBody.appendChild(row)
+  tableBody.appendChild(row);
 
-  document.getElementById('contract-id').value = '';
-
+  document.getElementById("contract-id").value = "";
 }
 
+async function initateTransfer() {
+  const agreementId = document.getElementById("agreementId-transfer").value;
+  const assetId = document.getElementById("assetId-transfer").value;
+
+  payload = {
+    "@context": {
+      odrl: "http://www.w3.org/ns/odrl/2/",
+    },
+    assetId: assetId,
+    connectorAddress: "http://bob-controlplane:8084/api/v1/dsp",
+    connectorId: "BPNL000000000002",
+    contractId: agreementId,
+    dataDestination: {
+      type: "HttpProxy",
+    },
+    privateProperties: {
+      receiverHttpEndpoint: "http://backend:8080",
+    },
+    protocol: "dataspace-protocol-http",
+    transferType: {
+      contentType: "application/octet-stream",
+      isFinite: true,
+    },
+  };
+
+  try {
+    const response = await fetch(
+      "http://localhost:8080/api/v1/transfers/alice",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    if (response.ok) {
+      showToast("Transfer Process Initiated successfully", false);
+    } else {
+      showToast("Error occurred", true);
+    }
+  } catch (error) {
+    console.log("Error:", error);
+    showToast("Error occurred", true);
+  }
+}
 
 async function fetchTransfers() {
   try {
-      const response = await fetch('http://localhost:8080/api/v1/transfers/alice/allTransfers', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-      });
+    const response = await fetch(
+      "http://localhost:8080/api/v1/transfers/alice/allTransfers",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
 
-      if (response.ok) {
-          const transfers = await response.json()
-          displayTransfer(transfers)
-      }
-      else {
-          console.error("Failed to fetch Transfers")
-      }
-  }
-  catch (error) {
-      console.log("Error:", error)
+    if (response.ok) {
+      const transfers = await response.json();
+      displayTransfer(transfers);
+    } else {
+      console.error("Failed to fetch Transfers");
+    }
+  } catch (error) {
+    console.log("Error:", error);
   }
 }
 
 function displayTransfer(transfers) {
-  const tableBody = document.getElementById('transferDataTableBody');
-  const tableContainer = document.getElementById('transferTable')
+  const tableBody = document.getElementById("transferDataTableBody");
+  const tableContainer = document.getElementById("transferTable");
 
-  if (tableContainer.style.visibility === 'visible') {
-      tableContainer.style.visibility = 'hidden';
-      tableBody.innerHTML = "";
-  }
-  else {
-      tableContainer.style.visibility = 'visible';
-      tableBody.innerHTML = '';
+  if (tableContainer.style.visibility === "visible") {
+    tableContainer.style.visibility = "hidden";
+    tableBody.innerHTML = "";
+  } else {
+    tableContainer.style.visibility = "visible";
+    tableBody.innerHTML = "";
 
-      transfers.forEach(transfer => {
-          const row = document.createElement('tr');
+    transfers.forEach((transfer) => {
+      const row = document.createElement("tr");
 
-          const idCell = document.createElement('td');
-          idCell.textContent = transfer['@id'];
+      const idCell = document.createElement("td");
+      idCell.textContent = transfer["@id"];
 
-          const stateCell = document.createElement('td');
-          stateCell.textContent = transfer["state"];
+      const stateCell = document.createElement("td");
+      stateCell.textContent = transfer["state"];
 
-          const typeCell = document.createElement('td');
-          typeCell.textContent = transfer['type'];
+      const typeCell = document.createElement("td");
+      typeCell.textContent = transfer["type"];
 
-          const contractIdCell = document.createElement('td');
-          contractIdCell.textContent = transfer['contractId'];
+      const contractIdCell = document.createElement("td");
+      contractIdCell.textContent = transfer["contractId"];
 
-          row.appendChild(idCell);
-          row.appendChild(stateCell);
-          row.appendChild(typeCell);
-          row.appendChild(contractIdCell);
+      row.appendChild(idCell);
+      row.appendChild(stateCell);
+      row.appendChild(typeCell);
+      row.appendChild(contractIdCell);
 
-          tableBody.appendChild(row);
-
-      });
+      tableBody.appendChild(row);
+    });
   }
 }
 
@@ -1048,57 +1241,55 @@ async function searchTransferById() {
   const transferId = document.getElementById("transfer-id").value;
 
   if (!transferId) {
-      showToast("Please enter Transfer id", true);
-      return;
+    showToast("Please enter Transfer id", true);
+    return;
   }
 
   try {
-      const response = await fetch(`http://localhost:8080/api/v1/transfers/alice/${transferId}`);
+    const response = await fetch(
+      `http://localhost:8080/api/v1/transfers/alice/${transferId}`
+    );
 
-      if (response.ok) {
-          const data = await response.json();
-          document.getElementById("transferTable").innerHTML = "";
-          addTransferToTable(
-              data['@id'],
-              data["state"],
-              data["type"],
-              data["contractId"]
-          );
-          showToast("Search completed", false);
-      }
-      else if (response.status === 404) {
-          showToast("Transfer Process id not found", true);
-      }
-      else {
-          showToast("Error occurred", true);
-      }
-
-  }
-  catch (error) {
-      console.error("Error:", error)
+    if (response.ok) {
+      const data = await response.json();
+      document.getElementById("transferTable").innerHTML = "";
+      addTransferToTable(
+        data["@id"],
+        data["state"],
+        data["type"],
+        data["contractId"]
+      );
+      showToast("Search completed", false);
+    } else if (response.status === 404) {
+      showToast("Transfer Process id not found", true);
+    } else {
       showToast("Error occurred", true);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    showToast("Error occurred", true);
   }
 }
 
 async function addTransferToTable(transferId, state, type, contractId) {
-  const tableBody = document.getElementById('transferDataTableBody')
-  const tableContainer = document.getElementById('transferIdTable')
-  tableContainer.style.visibility = 'visible';
+  const tableBody = document.getElementById("transferDataTableBody");
+  const tableContainer = document.getElementById("transferIdTable");
+  tableContainer.style.visibility = "visible";
 
   tableBody.innerHTML = "";
 
-  const row = document.createElement('tr');
+  const row = document.createElement("tr");
 
-  const idCell = document.createElement('td');
+  const idCell = document.createElement("td");
   idCell.textContent = transferId;
 
-  const stateCell = document.createElement('td');
+  const stateCell = document.createElement("td");
   stateCell.textContent = state;
 
-  const typeCell = document.createElement('td');
+  const typeCell = document.createElement("td");
   typeCell.textContent = type;
 
-  const contractIdCell = document.createElement('td');
+  const contractIdCell = document.createElement("td");
   contractIdCell.textContent = contractId;
 
   row.appendChild(idCell);
@@ -1106,8 +1297,7 @@ async function addTransferToTable(transferId, state, type, contractId) {
   row.appendChild(typeCell);
   row.appendChild(contractIdCell);
 
-  tableBody.appendChild(row)
+  tableBody.appendChild(row);
 
-  document.getElementById('transfer-id').value = '';
-
+  document.getElementById("transfer-id").value = "";
 }

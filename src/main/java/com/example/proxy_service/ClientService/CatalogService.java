@@ -14,6 +14,9 @@ public class CatalogService {
     @Value("${consumer-url}")
     private String CONSUMER_MANAGEMENT_URL;
 
+    @Value("${provider-url}")
+    private String PROVIDER_MANAGEMENT_URL;
+
     private String CATALOG_REQUEST = "/v2/catalog/request";
 
     private final WebClient webClient;
@@ -37,4 +40,18 @@ public class CatalogService {
                 .doOnError(error -> System.err.println("Error occured: " + error.getMessage()));
     }
 
+    public Mono<ResponseEntity<String>> alicegetCatalog(String catalogRequest) {
+        return webClient
+                .post()
+                .uri(PROVIDER_MANAGEMENT_URL + CATALOG_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(catalogRequest)
+                .retrieve()
+                .bodyToMono(String.class)
+                .map(body -> ResponseEntity.ok(body))
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                    return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
+                })
+                .doOnError(error -> System.err.println("Error occured: " + error.getMessage()));
+    }
 }

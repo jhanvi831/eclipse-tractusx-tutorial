@@ -33,4 +33,26 @@ public class Policy {
         return policyService.deletePolicyById(id);
     }
 
+    // BOB
+
+    @PostMapping("/bob")
+    public Mono<ResponseEntity<String>> bobcreatePolicy(@RequestBody String Policy) {
+        return policyService.bobcreatePolicy(Policy);
+    }
+
+    @PostMapping("/bob/allPolicies")
+    public Mono<ResponseEntity<String>> bobgetAllPolicies() {
+        return policyService.bobgetAllPolicies();
+    }
+
+    @GetMapping("/bob/{id}")
+    public Mono<ResponseEntity<String>> bobgetPolicyById(@PathVariable String id) {
+        return policyService.bobgetPolicyById(id);
+    }
+
+    @DeleteMapping("/bob/{id}")
+    public Mono<ResponseEntity<String>> bobdeletePolicyById(@PathVariable String id) {
+        return policyService.bobdeletePolicyById(id);
+    }
+
 }
