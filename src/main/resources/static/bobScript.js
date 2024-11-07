@@ -240,6 +240,9 @@ function displayCatalog(catalogs) {
       policy.forEach((catalog) => {
         const row = document.createElement("tr");
 
+        const assetIdCell = document.createElement("td");
+        assetIdCell.textContent = catalog["odrl:permission"]["odrl:target"];
+
         const offerIdCell = document.createElement("td");
         offerIdCell.textContent = catalog["@id"];
 
@@ -249,6 +252,7 @@ function displayCatalog(catalogs) {
             "odrl:rightOperand"
           ];
 
+        row.appendChild(assetIdCell);
         row.appendChild(offerIdCell);
         row.appendChild(bpgCell);
 
