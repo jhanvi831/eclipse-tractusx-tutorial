@@ -59,8 +59,12 @@ async function addBusinessPartnerGroup() {
   ).value;
   const toast = document.getElementById("toast");
 
-  if (!policyBpn || !businessPartnerGroup) {
-    showToast("Please fill the required fields", true);
+  if (!policyBpn) {
+    showToast("BPN cannot be empty", true);
+    return;
+  }
+  if (!businessPartnerGroup) {
+    showToast("Business Partner Group cannot be empty", true);
     return;
   }
 
@@ -101,8 +105,13 @@ async function updateBusinessPartnerGroup() {
     "Update-Business-Partner-Group"
   ).value;
 
-  if (!updateBpn || !updateGroup) {
-    showToast("Enter the values", true);
+  if (!updateBpn) {
+    showToast("BPN cannot be empty", true);
+    return;
+  }
+
+  if (!updateGroup) {
+    showToast("Specify group to update", true);
     return;
   }
 
@@ -386,6 +395,11 @@ async function savePolicy() {
     const accessPolicyId = document.getElementById("accesspolicyId").value;
     console.log("Creating Access Policy with Id: ", accessPolicyId);
 
+    if (!accessPolicyId) {
+      showToast("Access Policy Id cannot be empty", true);
+      return;
+    }
+
     payload = {
       "@context": {
         "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
@@ -420,6 +434,16 @@ async function savePolicy() {
   } else if (activeTab === "contract-tab") {
     const contractPolicyId = document.getElementById("contractpolicyId").value;
     const businessPartner = document.getElementById("businessPartner").value;
+
+    if (!contractPolicyId) {
+      showToast("Contract Policy Id cannot be empty", true);
+      return;
+    }
+
+    if (!businessPartner) {
+      showToast("Specify Business Partner Group", true);
+      return;
+    }
 
     console.log("Creating Contract Policy with Id: ", contractPolicyId);
 
@@ -531,13 +555,13 @@ function displayPolicies(policies) {
       const leftOperandCell = document.createElement("td");
       leftOperandCell.textContent =
         policy.policy["odrl:permission"]["odrl:constraint"]["odrl:or"][
-          "odrl:leftOperand"
+        "odrl:leftOperand"
         ];
 
       const rightOperandCell = document.createElement("td");
       rightOperandCell.textContent =
         policy.policy["odrl:permission"]["odrl:constraint"]["odrl:or"][
-          "odrl:rightOperand"
+        "odrl:rightOperand"
         ];
 
       row.appendChild(idCell);
@@ -568,10 +592,10 @@ async function searchPolicyById() {
       addPolicyToTable(
         data["@id"],
         data.policy["odrl:permission"]["odrl:constraint"]["odrl:or"][
-          "odrl:leftOperand"
+        "odrl:leftOperand"
         ],
         data.policy["odrl:permission"]["odrl:constraint"]["odrl:or"][
-          "odrl:rightOperand"
+        "odrl:rightOperand"
         ]
       );
       showToast("Search completed", false);
@@ -649,6 +673,23 @@ async function saveContract() {
   const accessPolicyId = document.getElementById("accessPolicyId").value;
   const contractPolicyId = document.getElementById("contractpolicyId").value;
   const assetId = document.getElementById("assetId-contract").value;
+
+  if (!contractId) {
+    showToast("Contract Id cannot be empty", true);
+    return;
+  }
+  if (!accessPolicyId) {
+    showToast("Access Policy Id cannot be empty", true);
+    return;
+  }
+  if (!contractPolicyId) {
+    showToast("Contract Policy Id cannot be empty", true);
+    return;
+  }
+  if (!assetId) {
+    showToast("Asset Id cannot be empty", true);
+    return;
+  }
 
   console.log("Access Policy Id: ", accessPolicyId);
   console.log("Contract Policy Id", contractPolicyId);
@@ -909,7 +950,7 @@ function displayCatalog(catalogs) {
         const bpgCell = document.createElement("td");
         bpgCell.textContent =
           catalog["odrl:permission"]["odrl:constraint"]["odrl:or"][
-            "odrl:rightOperand"
+          "odrl:rightOperand"
           ];
 
         row.appendChild(assetIdCell);
@@ -928,6 +969,19 @@ async function initateNegotiation() {
   const businessPartner = document.getElementById(
     "business-partner-nego"
   ).value;
+
+  if (!offerId) {
+    showToast("Offer Id cannot be empty", true);
+    return;
+  }
+  if (!assetId) {
+    showToast("Asset Id cannot be empty", true);
+    return;
+  }
+  if (!businessPartner) {
+    showToast("business partner cannot be empty", true);
+    return;
+  }
 
   try {
     payload = {
@@ -1137,6 +1191,15 @@ async function addNegotiationToTable(
 async function initateTransfer() {
   const agreementId = document.getElementById("agreementId-transfer").value;
   const assetId = document.getElementById("assetId-transfer").value;
+
+  if (!assetId) {
+    showToast("Asset Id cannot be empty", true);
+    return;
+  }
+  if (!agreementId) {
+    showToast("Agreement Id cannot be empty", true);
+    return;
+  }
 
   payload = {
     "@context": {
